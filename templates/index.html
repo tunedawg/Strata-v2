@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" href="/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strata</title>
+<title>Strata — Index</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --bg:        #080a0f;
   --surface:   #0f1118;
@@ -32,761 +29,167 @@
   --radius-sm: 6px;
   --transition: 0.15s ease;
 }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
-body {
-  font-family: var(--sans);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── Header ─────────────────────────────────────────────── */
-header {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 0 24px;
-  height: 52px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(8,10,15,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-shrink: 0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-right: 32px;
-}
-.logo-mark {
-  width: 26px;
-  height: 26px;
-  position: relative;
-  flex-shrink: 0;
-}
+/* ── Header ── */
+header { display: flex; align-items: center; padding: 0 24px; height: 52px; border-bottom: 1px solid var(--border); background: rgba(8,10,15,0.95); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 9px; margin-right: 32px; text-decoration: none; }
+.logo-mark { width: 26px; height: 26px; flex-shrink: 0; }
 .logo-mark svg { width: 100%; height: 100%; }
-.logo-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-.logo-name span {
-  color: var(--accent-hi);
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  gap: 2px;
-}
-.nav-link {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0 16px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--text2);
-  border-bottom: 2px solid transparent;
-  transition: color var(--transition), border-color var(--transition);
-  cursor: pointer;
-  background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  font-family: var(--sans);
-  letter-spacing: 0.01em;
-}
+.logo-name { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.03em; color: var(--text); }
+nav { display: flex; align-items: center; height: 100%; gap: 2px; }
+.nav-link { display: flex; align-items: center; height: 100%; padding: 0 16px; font-size: 0.8rem; font-weight: 500; text-decoration: none; color: var(--text2); border-bottom: 2px solid transparent; transition: color var(--transition), border-color var(--transition); }
 .nav-link:hover { color: var(--text); }
-.nav-link.active {
-  color: var(--accent-hi);
-  border-bottom-color: var(--accent);
-}
+.nav-link.active { color: var(--accent-hi); border-bottom-color: var(--accent); }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 
-#status-pill {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border2);
-  font-size: 0.72rem;
-  font-family: var(--mono);
-  color: var(--text2);
-  background: var(--surface2);
-  transition: all 0.3s;
-  white-space: nowrap;
-}
-#status-pill.ready { border-color: rgba(52,211,153,0.3); color: var(--success); background: rgba(52,211,153,0.06); }
-#status-pill.busy  { border-color: rgba(251,191,36,0.3);  color: var(--warning);  background: rgba(251,191,36,0.06); }
-.dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--text3);
-  flex-shrink: 0;
-  transition: background 0.3s;
-}
-#status-pill.ready .dot { background: var(--success); animation: pulse 2.5s infinite; }
-#status-pill.busy  .dot { background: var(--warning);  animation: pulse 0.9s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+/* Status pill */
+#status-pill { display: flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.75rem; font-family: var(--mono); color: var(--text2); background: var(--surface); transition: all 0.3s; }
+#status-pill.ready { border-color: rgba(52,211,153,0.4); color: var(--success); }
+#status-pill.busy  { border-color: rgba(251,191,36,0.4);  color: var(--warning); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); transition: background 0.3s; flex-shrink: 0; }
+#status-pill.ready .dot { background: var(--success); animation: pulse 2s infinite; }
+#status-pill.busy  .dot { background: var(--warning);  animation: pulse 0.8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* ── Layout ──────────────────────────────────────────────── */
-.app {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  height: calc(100vh - 52px);
-}
-
-/* ── Sidebar ─────────────────────────────────────────────── */
-aside {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.sidebar-top {
-  padding: 16px;
-  border-bottom: 1px solid var(--border);
-}
-.sidebar-label {
-  font-size: 0.72rem;
-  font-family: var(--mono);
-  color: var(--text2);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.new-ds-form {
-  display: flex;
-  gap: 6px;
-}
-.new-ds-form input {
-  flex: 1;
-  padding: 8px 11px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-size: 0.8rem;
-  font-family: var(--sans);
-  transition: border-color var(--transition);
-  outline: none;
-}
-.new-ds-form input::placeholder { color: var(--text3); }
-.new-ds-form input:focus { border-color: var(--accent); }
-.new-ds-form .add-btn {
-  width: 32px; height: 32px;
-  background: var(--accent);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: white;
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: background var(--transition);
-  line-height: 1;
-}
-.new-ds-form .add-btn:hover { background: var(--accent-hi); }
-
-.dataset-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface3) transparent;
-}
-.dataset-list::-webkit-scrollbar { width: 4px; }
-.dataset-list::-webkit-scrollbar-track { background: transparent; }
-.dataset-list::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
-
-.empty-ds {
-  text-align: center;
-  padding: 32px 16px;
-  color: var(--text3);
-  font-size: 0.78rem;
-  font-family: var(--mono);
-}
-
-.dataset-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all var(--transition);
-  margin-bottom: 2px;
-}
-.dataset-item:hover { background: var(--surface2); }
-.dataset-item.active {
-  background: var(--accent-lo);
-  border-color: rgba(59,130,246,0.2);
-}
-.ds-icon {
-  width: 30px; height: 30px;
-  border-radius: var(--radius-sm);
-  background: var(--surface3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-.dataset-item.active .ds-icon { background: rgba(59,130,246,0.15); }
-.ds-info { flex: 1; min-width: 0; }
-.ds-name {
-  font-size: 0.82rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text);
-}
-.ds-meta {
-  font-size: 0.68rem;
-  color: var(--text2);
-  font-family: var(--mono);
-  margin-top: 1px;
-}
-.icon-btn {
-  width: 22px; height: 22px;
-  border-radius: 4px;
-  border: none;
-  background: none;
-  color: var(--text3);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-  transition: all var(--transition);
-  flex-shrink: 0;
-  opacity: 0;
-}
-.dataset-item:hover .icon-btn { opacity: 1; }
-.icon-btn:hover { background: rgba(248,113,113,0.12); color: var(--danger); }
-
-/* Upload panel */
-.upload-panel {
-  border-top: 1px solid var(--border);
-  padding: 14px 16px;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-}
-.upload-panel.visible { display: flex; }
-.upload-panel-title {
-  font-size: 0.65rem;
-  font-family: var(--mono);
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-
-
-.upload-btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
-.btn-index {
-  grid-column: span 2;
-}
-
-#upload-status {
-  font-size: 0.72rem;
-  font-family: var(--mono);
-  color: var(--text2);
-  min-height: 16px;
-}
-.upload-prog-track {
-  height: 4px;
-  background: var(--surface3);
-  border-radius: 2px;
-  overflow: hidden;
-  display: none;
-  margin-top: 2px;
-}
-#upload-prog-bar {
-  height: 100%;
-  width: 0%;
-  border-radius: 2px;
-  transition: width 0.25s ease, background-color 0.4s ease;
-  background: #ef4444;
-}
-
-/* ── Buttons ─────────────────────────────────────────────── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 0.8rem;
-  font-weight: 500;
-  font-family: var(--sans);
-  cursor: pointer;
-  transition: all var(--transition);
-  white-space: nowrap;
-  letter-spacing: 0.01em;
-}
-.btn:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-.btn-primary {
-  background: var(--accent);
-  color: white;
-}
-.btn-primary:hover { background: var(--accent-hi); }
-.btn-ghost {
-  background: var(--surface2);
-  color: var(--text2);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); }
-.btn-sm { padding: 6px 12px; font-size: 0.75rem; }
-.btn-export {
-  background: rgba(129,140,248,0.12);
-  color: var(--accent2);
-  border: 1px solid rgba(129,140,248,0.2);
-  font-size: 0.75rem;
-  padding: 6px 12px;
-}
-.btn-export:hover { background: rgba(129,140,248,0.2); }
-
-/* ── Main ────────────────────────────────────────────────── */
-main {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-.search-area {
-  padding: 20px 28px 0;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.search-label {
-  font-size: 0.72rem;
-  font-family: var(--mono);
-  color: var(--text2);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 12px;
-  font-weight: 500;
-}
-
-#terms-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.term-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.term-row input {
-  flex: 1;
-  padding: 9px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-size: 0.85rem;
-  font-family: var(--mono);
-  transition: border-color var(--transition), background var(--transition);
-  outline: none;
-}
-.term-row input::placeholder { color: var(--text3); }
-.term-row input:focus {
-  border-color: var(--accent);
-  background: var(--surface2);
-}
-.term-row .remove {
-  width: 28px; height: 28px;
-  background: none; border: none;
-  color: var(--text3);
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  transition: all var(--transition);
-  flex-shrink: 0;
-}
-.term-row .remove:hover { color: var(--danger); background: rgba(248,113,113,0.1); }
-
-.search-actions {
-  display: flex;
-  gap: 8px;
-  padding: 12px 0;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.syntax-hint {
-  margin-left: auto;
-  font-size: 0.68rem;
-  font-family: var(--mono);
-  color: var(--text3);
-  line-height: 1.8;
-  text-align: right;
-}
-.syntax-hint code { color: var(--text2); }
-
-/* ── Results ─────────────────────────────────────────────── */
-.results-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface3) transparent;
-}
-.results-area::-webkit-scrollbar { width: 4px; }
-.results-area::-webkit-scrollbar-track { background: transparent; }
-.results-area::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
-
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--text3);
-  gap: 12px;
-  padding: 60px;
-  user-select: none;
-}
-.empty-icon {
-  width: 48px; height: 48px;
-  opacity: 0.2;
-}
-.empty-state p {
-  font-size: 0.82rem;
-  font-family: var(--mono);
-}
-
-.result-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: border-color var(--transition);
-}
-.result-card:hover { border-color: var(--border2); }
-
-.result-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: background var(--transition);
-}
-.result-header:hover { background: rgba(255,255,255,0.02); }
-
-.result-term {
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--text);
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.badge {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  padding: 3px 9px;
-  border-radius: 20px;
-  background: var(--accent-lo);
-  color: var(--accent-hi);
-  border: 1px solid rgba(59,130,246,0.2);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.badge.zero {
-  background: var(--surface2);
-  color: var(--text3);
-  border-color: var(--border);
-}
-
-.chevron {
-  color: var(--text3);
-  font-size: 0.65rem;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
-}
-.chevron.open { transform: rotate(90deg); }
-
-.result-body { display: none; border-top: 1px solid var(--border); }
-.result-body.open { display: block; }
-.result-body-inner { padding: 14px 16px; }
-
-.export-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-
-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-th {
-  text-align: left;
-  padding: 7px 12px;
-  background: var(--surface2);
-  color: var(--text3);
-  font-weight: 500;
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--border);
-}
-td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-  color: var(--text2);
-}
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
-.doc-name { color: var(--text); font-weight: 500; font-size: 0.8rem; }
-.chunks-cell { font-family: var(--mono); font-size: 0.72rem; }
-
-.chunk-tag {
-  display: inline-block;
-  background: var(--surface2);
-  color: var(--accent-hi);
-  padding: 2px 7px;
-  border-radius: 4px;
-  margin: 1px 2px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all var(--transition);
-  font-size: 0.7rem;
-}
-.chunk-tag:hover {
-  background: var(--accent-lo);
-  border-color: rgba(59,130,246,0.3);
-  color: white;
-}
-
-.no-results {
-  text-align: center;
-  color: var(--text3);
-  padding: 24px;
-  font-size: 0.8rem;
-  font-family: var(--mono);
-}
-
-/* ── Loading overlay ─────────────────────────────────────── */
-#loading {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(4px);
-  z-index: 300;
-  align-items: center;
-  justify-content: center;
-}
-#loading.show { display: flex; }
-.spinner {
-  width: 36px; height: 36px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Help button ─────────────────────────────────────────── */
-.help-btn {
-  margin-left: 12px;
-  width: 32px; height: 32px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition);
-  flex-shrink: 0;
-}
+/* Help button */
+.help-btn { width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface2); color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; }
 .help-btn:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); }
 
-/* ── Help modal ──────────────────────────────────────────── */
-.help-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(6px);
-  z-index: 500;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
+/* ── Layout ── */
+.app { display: grid; grid-template-columns: 280px 1fr; flex: 1; min-height: 0; overflow: hidden; }
+
+/* ── Sidebar ── */
+aside { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.sidebar-section { padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sidebar-section h3 { font-size: 0.68rem; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-weight: 500; }
+
+/* Dataset list */
+.dataset-list { display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex: 1; padding: 10px; }
+.dataset-item { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+.dataset-item:hover { background: var(--surface2); border-color: var(--border); }
+.dataset-item.active { background: var(--accent-lo); border-color: rgba(59,130,246,0.25); }
+.ds-icon { width: 26px; height: 26px; border-radius: 5px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.dataset-item.active .ds-icon { background: var(--accent-lo); }
+.ds-info { flex: 1; min-width: 0; }
+.ds-name { font-size: 0.83rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-meta { font-size: 0.68rem; color: var(--text2); font-family: var(--mono); margin-top: 1px; }
+.icon-btn { width: 22px; height: 22px; border-radius: 4px; border: none; background: none; color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all 0.15s; }
+.icon-btn:hover { background: rgba(248,113,113,0.1); color: var(--danger); }
+
+/* New dataset form */
+.new-ds-form { display: flex; gap: 6px; }
+.new-ds-form input { flex: 1; padding: 7px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.82rem; font-family: var(--sans); }
+.new-ds-form input:focus { outline: none; border-color: var(--accent); }
+.new-ds-form input::placeholder { color: var(--text3); }
+
+/* Upload zone */
+.upload-zone { border: 1.5px dashed var(--border); border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; font-size: 0.78rem; color: var(--text2); }
+.upload-zone:hover, .upload-zone.drag { border-color: var(--accent); color: var(--accent-hi); background: var(--accent-lo); }
+.upload-zone .icon { font-size: 1.3rem; margin-bottom: 5px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-sm); border: none; font-size: 0.8rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all var(--transition); white-space: nowrap; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hi); }
+.btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); }
+.btn-accent2 { background: var(--accent2); color: white; padding: 6px 12px; font-size: 0.75rem; }
+.btn-accent2:hover { background: #6d74e8; }
+.btn-sm { padding: 6px 12px; font-size: 0.75rem; }
+
+/* ── Main ── */
+main { display: flex; flex-direction: column; overflow: hidden; }
+.search-area { padding: 20px 28px 0; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.search-area h2 { font-size: 0.68rem; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+#terms-container { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+.term-row { display: flex; gap: 7px; align-items: center; }
+.term-row input { flex: 1; padding: 9px 13px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.87rem; font-family: var(--mono); transition: border-color 0.2s; }
+.term-row input::placeholder { color: var(--text3); }
+.term-row input:focus { outline: none; border-color: var(--accent); }
+.term-row .remove { background: none; border: none; color: var(--text3); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.15s; }
+.term-row .remove:hover { color: var(--danger); background: rgba(248,113,113,0.1); }
+.search-actions { display: flex; gap: 8px; padding-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.syntax-hint { margin-left: auto; font-size: 0.7rem; font-family: var(--mono); color: var(--text3); line-height: 1.8; text-align: right; }
+.syntax-hint code { color: var(--accent2); }
+
+/* Results */
+.results-area { flex: 1; overflow-y: auto; padding: 20px 28px; display: flex; flex-direction: column; gap: 12px; }
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text3); gap: 10px; padding: 60px; }
+.empty-state .big-icon { font-size: 3rem; opacity: 0.35; }
+.empty-state p { font-size: 0.87rem; font-family: var(--mono); }
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
+.result-card:hover { border-color: var(--text3); }
+.result-header { display: flex; align-items: center; gap: 12px; padding: 13px 17px; cursor: pointer; user-select: none; }
+.result-header:hover { background: rgba(255,255,255,0.02); }
+.result-term { font-family: var(--mono); font-size: 0.88rem; color: var(--accent2); flex: 1; }
+.badge { font-family: var(--mono); font-size: 0.7rem; padding: 3px 9px; border-radius: 20px; background: var(--accent-lo); color: var(--accent); border: 1px solid rgba(59,130,246,0.2); }
+.badge.zero { background: var(--surface2); color: var(--text3); border-color: var(--border); }
+.chevron { color: var(--text3); font-size: 0.72rem; transition: transform 0.2s; }
+.chevron.open { transform: rotate(90deg); }
+.result-body { display: none; border-top: 1px solid var(--border); }
+.result-body.open { display: block; }
+.result-body-inner { padding: 14px 17px; }
+.export-row { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th { text-align: left; padding: 7px 11px; background: var(--surface2); color: var(--text3); font-weight: 500; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
+td { padding: 8px 11px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+.doc-name { color: var(--text); font-weight: 500; }
+.chunks-cell { font-family: var(--mono); font-size: 0.73rem; }
+.chunk-tag { display: inline-block; background: var(--surface2); color: var(--accent); padding: 1px 6px; border-radius: 3px; margin: 1px 2px; border: 1px solid var(--border); text-decoration: none; cursor: pointer; transition: all 0.15s; font-size: 0.7rem; }
+.chunk-tag:hover { background: var(--accent-lo); border-color: var(--accent); color: var(--accent-hi); }
+.no-results { text-align: center; color: var(--text3); padding: 18px; font-size: 0.83rem; font-family: var(--mono); }
+
+/* Upload progress */
+#upload-prog-wrap { margin-top: 5px; }
+.prog-bar-bg { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.prog-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.25s; width: 0%; }
+
+/* Loading */
+#loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 300; align-items: center; justify-content: center; }
+#loading.show { display: flex; }
+.spinner-ring { width: 40px; height: 40px; border: 2.5px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.65s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Help modal ── */
+.help-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 500; align-items: center; justify-content: center; padding: 24px; }
 .help-overlay.show { display: flex; }
-.help-modal {
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 14px;
-  width: 680px;
-  max-width: 100%;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.help-header {
-  display: flex;
-  align-items: center;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.help-header h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  flex: 1;
-}
-.help-close {
-  width: 28px; height: 28px;
-  border-radius: 6px;
-  border: none;
-  background: var(--surface2);
-  color: var(--text2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  transition: all var(--transition);
-}
+.help-modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; width: 680px; max-width: 100%; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
+.help-header { display: flex; align-items: center; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.help-header h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; flex: 1; }
+.help-close { width: 28px; height: 28px; border-radius: 6px; border: none; background: var(--surface2); color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all var(--transition); }
 .help-close:hover { background: var(--surface3); color: var(--text); }
-.help-tabs {
-  display: flex;
-  gap: 2px;
-  padding: 12px 24px 0;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.help-tab {
-  padding: 7px 14px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text2);
-  border: none;
-  background: none;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all var(--transition);
-  font-family: var(--sans);
-  margin-bottom: -1px;
-}
+.help-tabs { display: flex; gap: 2px; padding: 12px 24px 0; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.help-tab { padding: 7px 14px; font-size: 0.78rem; font-weight: 500; color: var(--text2); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all var(--transition); font-family: var(--sans); margin-bottom: -1px; }
 .help-tab:hover { color: var(--text); }
 .help-tab.active { color: var(--accent-hi); border-bottom-color: var(--accent); }
-.help-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface3) transparent;
-}
+.help-body { flex: 1; overflow-y: auto; padding: 24px; scrollbar-width: thin; scrollbar-color: var(--surface3) transparent; }
 .help-body::-webkit-scrollbar { width: 4px; }
 .help-body::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
 .help-panel { display: none; }
 .help-panel.active { display: block; }
 .help-section { margin-bottom: 24px; }
 .help-section:last-child { margin-bottom: 0; }
-.help-section h3 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent-hi);
-  margin-bottom: 8px;
-  letter-spacing: 0.01em;
-}
-.help-section p {
-  font-size: 0.82rem;
-  color: var(--text2);
-  line-height: 1.7;
-  margin-bottom: 8px;
-}
+.help-section h3 { font-size: 0.8rem; font-weight: 600; color: var(--accent-hi); margin-bottom: 8px; }
+.help-section p { font-size: 0.82rem; color: var(--text2); line-height: 1.7; margin-bottom: 8px; }
 .help-section p:last-child { margin-bottom: 0; }
-.help-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.help-step {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.step-num {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--accent-lo);
-  border: 1px solid rgba(59,130,246,0.25);
-  color: var(--accent-hi);
-  font-size: 0.68rem;
-  font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.step-text {
-  font-size: 0.82rem;
-  color: var(--text2);
-  line-height: 1.6;
-}
+.help-steps { display: flex; flex-direction: column; gap: 8px; }
+.help-step { display: flex; gap: 12px; align-items: flex-start; }
+.step-num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent-lo); border: 1px solid rgba(59,130,246,0.25); color: var(--accent-hi); font-size: 0.68rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.step-text { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
 .step-text strong { color: var(--text); font-weight: 500; }
-.help-code {
-  display: inline-block;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1px 7px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--accent2);
-}
-.help-tip {
-  background: rgba(59,130,246,0.06);
-  border: 1px solid rgba(59,130,246,0.15);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 0.78rem;
-  color: var(--text2);
-  line-height: 1.6;
-  margin-top: 12px;
-}
+.help-code { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; font-family: var(--mono); font-size: 0.75rem; color: var(--accent2); }
+.help-tip { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.78rem; color: var(--text2); line-height: 1.6; margin-top: 12px; }
 .help-tip strong { color: var(--accent-hi); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
+  <a href="/" class="logo">
     <div class="logo-mark">
       <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="3" y="5" width="20" height="4" rx="2" fill="#3b82f6" opacity="1"/>
@@ -795,55 +198,70 @@ tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
       </svg>
     </div>
     <span class="logo-name">Strata</span>
-  </div>
-
+  </a>
   <nav>
-    <a href="#" class="nav-link active">Index</a>
-    <a href="#" href="/production" class="nav-link">Production</a>
-    <a href="#" href="/redactions" class="nav-link">Redactions</a>
+    <a href="/" class="nav-link active">Index</a>
+    <a href="/production" class="nav-link">Production</a>
+    <a href="/redactions" class="nav-link">Redactions</a>
   </nav>
-
-  <div id="status-pill">
-    <div class="dot"></div>
-    <span id="status-text">No dataset loaded</span>
+  <div class="header-right">
+    <div id="status-pill">
+      <div class="dot"></div>
+      <span id="status-text">No dataset loaded</span>
+    </div>
+    <button class="help-btn" onclick="toggleHelp()" title="How to use Strata">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <rect x="3" y="1" width="10" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/>
+        <line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
-  <button class="help-btn" onclick="toggleHelp()" title="How to use Strata">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <rect x="3" y="1" width="10" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/>
-      <line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-      <line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-      <line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-    </svg>
-  </button>
 </header>
 
 <div class="app">
 
   <!-- Sidebar -->
   <aside>
-    <div class="sidebar-top">
-      <div class="sidebar-label">Productions</div>
+    <div class="sidebar-section">
+      <h3>Datasets</h3>
       <div class="new-ds-form">
-        <input type="text" id="new-ds-name" placeholder="New production…"
+        <input type="text" id="new-ds-name" placeholder="New dataset name…"
           onkeydown="if(event.key==='Enter') createDataset()">
-        <button class="add-btn" onclick="createDataset()">+</button>
+        <button class="btn btn-primary" style="padding:7px 11px" onclick="createDataset()">+</button>
       </div>
     </div>
 
     <div class="dataset-list" id="dataset-list">
-      <div class="empty-ds">No productions yet</div>
+      <div style="color:var(--text3);font-size:0.78rem;font-family:var(--mono);text-align:center;padding:20px">No datasets yet</div>
     </div>
 
-    <div class="upload-panel" id="upload-section">
-      <div class="upload-panel-title" id="upload-title">Files</div>
-      <div class="upload-btns">
-        <button class="btn btn-ghost btn-sm" onclick="pickAndUpload(false)">📄 Add Files</button>
-        <button class="btn btn-ghost btn-sm" onclick="pickAndUpload(true)">📁 Add Folder</button>
-        <button class="btn btn-primary btn-sm btn-index" onclick="indexDataset()">⚡ Build Index</button>
+    <div class="sidebar-section" id="upload-section" style="display:none">
+      <h3 id="upload-title">Upload files</h3>
+      <div class="upload-zone" id="drop-zone"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <div class="icon">📂</div>
+        <div>Drop files or folders here</div>
+        <div style="font-size:0.68rem;margin-top:3px;color:var(--text3)">PDF · DOCX · PPTX · CSV · XLSX · TXT · EML · MSG · Images</div>
       </div>
-      <div id="upload-status"></div>
-      <div class="upload-prog-track" id="upload-prog-wrap">
-        <div id="upload-prog-bar"></div>
+      <input type="file" id="file-input" multiple
+        accept=".pdf,.docx,.doc,.pptx,.ppt,.csv,.xlsx,.xls,.txt,.md,.rtf,.eml,.msg,.png,.jpg,.jpeg,.tif,.tiff,.bmp"
+        onchange="uploadFiles(Array.from(this.files), false); this.value=''">
+      <input type="file" id="folder-input" webkitdirectory multiple
+        onchange="uploadFiles(Array.from(this.files), true); this.value=''">
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="document.getElementById('file-input').click()">📄 Files</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="document.getElementById('folder-input').click()">📁 Folder</button>
+      </div>
+      <div style="margin-top:8px">
+        <button class="btn btn-primary" style="width:100%;font-size:0.8rem" onclick="indexDataset()">⚡ Build Index</button>
+      </div>
+      <div id="upload-status" style="margin-top:8px;font-size:0.72rem;font-family:var(--mono);color:var(--text3)"></div>
+      <div id="upload-prog-wrap" style="display:none;margin-top:5px">
+        <div class="prog-bar-bg"><div id="upload-prog-bar" class="prog-bar-fill"></div></div>
       </div>
     </div>
   </aside>
@@ -851,18 +269,18 @@ tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
   <!-- Main -->
   <main>
     <div class="search-area">
-      <div class="search-label">Search Terms</div>
+      <h2>Search Terms</h2>
       <div id="terms-container"></div>
       <div class="search-actions">
-        <button class="btn btn-primary btn-sm" id="search-btn" onclick="doSearch()" disabled>Search</button>
-        <button class="btn btn-ghost btn-sm" onclick="addTerm()">+ Term</button>
+        <button class="btn btn-primary" id="search-btn" onclick="doSearch()" disabled>⌕ Search</button>
+        <button class="btn btn-ghost btn-sm" onclick="addTerm()">+ Add term</button>
         <button class="btn btn-ghost btn-sm" onclick="clearTerms()">Clear</button>
-        <button class="btn btn-ghost btn-sm" id="report-xlsx-btn" onclick="doHitReport('xlsx')" disabled>Hit Report ↗</button>
-        <button class="btn btn-ghost btn-sm" id="report-pdf-btn" onclick="doHitReport('pdf')" disabled>Hit Report PDF ↗</button>
+        <button class="btn btn-ghost btn-sm" id="report-xlsx-btn" onclick="doHitReport('xlsx')" disabled>📊 Hit Report (xlsx)</button>
+        <button class="btn btn-ghost btn-sm" id="report-pdf-btn" onclick="doHitReport('pdf')" disabled>📄 Hit Report (pdf)</button>
         <div class="syntax-hint">
           <code>AND</code> <code>OR</code> <code>NOT</code> &nbsp;
           <code>"exact phrase"</code> &nbsp;
-          <code>run*</code> &nbsp;
+          <code>run*</code> wildcard &nbsp;
           <code>~fuzzy</code> &nbsp;
           <code>"a" W/10 "b"</code>
         </div>
@@ -871,231 +289,240 @@ tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
 
     <div class="results-area" id="results-area">
       <div class="empty-state">
-        <svg class="empty-icon" viewBox="0 0 48 48" fill="none">
-          <rect x="6" y="10" width="36" height="6" rx="3" fill="currentColor"/>
-          <rect x="6" y="21" width="36" height="6" rx="3" fill="currentColor"/>
-          <rect x="6" y="32" width="24" height="6" rx="3" fill="currentColor"/>
-        </svg>
-        <p>Select a production and search</p>
+        <div class="big-icon">⌕</div>
+        <p>Load a dataset and start searching</p>
       </div>
     </div>
   </main>
 </div>
 
-<div id="loading"><div class="spinner"></div></div>
+<div id="loading"><div class="spinner-ring"></div></div>
 
 <script>
 let activeDataset  = null;
 let currentResults = {};
 
-// ── Flask fetch wrapper ──────────────────────────────────────────────────────
-async function api(url, options = {}) {
-  const resp = await fetch(url, {
-    method: options.method || 'GET',
-    headers: options.body !== undefined ? {'Content-Type': 'application/json'} : {},
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({error: resp.statusText}));
-    throw new Error(err.error || resp.statusText);
-  }
-  return resp.json();
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────────
-
-
 // ── Status polling ────────────────────────────────────────────────────────────
-async function pollStatus() {
-  try {
-    const d    = await api('/index/status');
-    const pill = document.getElementById('status-pill');
-    const text = document.getElementById('status-text');
-    const btn  = document.getElementById('search-btn');
-
-    if (d.status === 'indexing') {
-      pill.className = 'busy';
+function pollStatus() {
+  fetch("/index/status").then(r => r.json()).then(d => {
+    const pill = document.getElementById("status-pill");
+    const text = document.getElementById("status-text");
+    const btn  = document.getElementById("search-btn");
+    if (d.status === "indexing") {
+      pill.className = "busy";
       const pct = d.total ? Math.round(d.done / d.total * 100) : 0;
       text.textContent = `Indexing ${d.dataset}… ${d.done}/${d.total} (${pct}%)`;
       setTimeout(pollStatus, 1500);
-    } else if (d.status === 'loading') {
-      pill.className = 'busy';
+    } else if (d.status === "loading") {
+      pill.className = "busy";
       text.textContent = `Loading ${d.dataset}…`;
       setTimeout(pollStatus, 800);
-    } else if (d.status === 'ready' && d.loaded) {
-      pill.className = 'ready';
+    } else if (d.status === "ready" && d.loaded) {
+      pill.className = "ready";
       text.textContent = `${d.loaded}  ·  ${d.done} files`;
       btn.disabled = false;
       refreshDatasets();
       setTimeout(pollStatus, 3000);
     } else {
-      pill.className = '';
-      text.textContent = 'No dataset loaded';
+      pill.className = "";
+      text.textContent = "No dataset loaded";
       btn.disabled = true;
       setTimeout(pollStatus, 3000);
     }
-  } catch(e) {
-    setTimeout(pollStatus, 3000);
-  }
+  }).catch(() => setTimeout(pollStatus, 3000));
 }
 
 // ── Datasets ──────────────────────────────────────────────────────────────────
-async function refreshDatasets() {
-  const d    = await api('/datasets');
-  const list = document.getElementById('dataset-list');
-  const datasets = Array.isArray(d) ? d : (d.datasets || []);
-  if (!datasets.length) {
-    list.innerHTML = `<div style="color:var(--text3);font-size:0.8rem;font-family:var(--mono);text-align:center;padding:20px">No datasets yet</div>`;
-    return;
-  }
-  list.innerHTML = datasets.map(ds => `
-    <div class="dataset-item ${ds.name === activeDataset ? 'active' : ''}"
-         onclick="selectDataset('${esc(ds.name)}', ${ds.indexed})">
-      <div class="ds-icon">${ds.indexed ? '📚' : '📁'}</div>
-      <div class="ds-info">
-        <div class="ds-name">${esc(ds.name)}</div>
-        <div class="ds-meta">${ds.files} file${ds.files !== 1 ? 's' : ''}${ds.indexed ? ' · indexed' : ' · not indexed'}</div>
-      </div>
-      <button class="icon-btn" title="Delete dataset" onclick="event.stopPropagation(); deleteDataset('${esc(ds.name)}')" style="color:var(--danger);opacity:0.6">🗑</button>
-    </div>`).join('');
+function refreshDatasets() {
+  fetch("/datasets").then(r => r.json()).then(datasets => {
+    const list = document.getElementById("dataset-list");
+    if (!datasets.length) {
+      list.innerHTML = `<div style="color:var(--text3);font-size:0.78rem;font-family:var(--mono);text-align:center;padding:20px">No datasets yet</div>`;
+      return;
+    }
+    list.innerHTML = datasets.map(ds => `
+      <div class="dataset-item ${ds.name === activeDataset ? 'active' : ''}"
+           onclick="selectDataset('${esc(ds.name)}', ${ds.indexed})">
+        <div class="ds-icon">${ds.indexed ? '📚' : '📁'}</div>
+        <div class="ds-info">
+          <div class="ds-name">${esc(ds.name)}</div>
+          <div class="ds-meta">${ds.files} file${ds.files !== 1 ? 's' : ''}${ds.indexed ? ' · indexed' : ' · not indexed'}</div>
+        </div>
+        <button class="icon-btn" title="Delete" onclick="event.stopPropagation(); deleteDataset('${esc(ds.name)}')">🗑</button>
+      </div>`).join("");
+  });
 }
 
-async function deleteDataset(name) {
-  if (!confirm(`Delete dataset "${name}" and all its files? This cannot be undone.`)) return;
-  const d = await api('/datasets/delete', {method:'POST', body:{name}});
-  if (d.error) { alert('Error: ' + d.error); return; }
-  if (activeDataset === name) {
-    activeDataset = null;
-    document.getElementById('upload-section').style.display = 'none';
-  }
-  refreshDatasets();
-  pollStatus();
+function deleteDataset(name) {
+  if (!confirm(`Delete dataset "${name}" and all its files?`)) return;
+  fetch(`/datasets/${encodeURIComponent(name)}/delete`, { method: "POST" })
+    .then(r => r.json())
+    .then(d => {
+      if (d.error) { alert("Error: " + d.error); return; }
+      if (activeDataset === name) {
+        activeDataset = null;
+        document.getElementById("upload-section").style.display = "none";
+      }
+      refreshDatasets();
+      pollStatus();
+    });
 }
 
-async function selectDataset(name, indexed) {
+function selectDataset(name, indexed) {
   activeDataset = name;
-  document.getElementById('upload-section').style.display = 'block';
-  document.getElementById('upload-title').textContent = `Files in: ${name}`;
+  document.getElementById("upload-section").style.display = "block";
+  document.getElementById("upload-title").textContent = `Files in: ${name}`;
   refreshDatasets();
   if (indexed) {
-    const d = await api('/index/load', {method:'POST', body:{dataset:name}});
-    if (d.ok) pollStatus();
+    fetch(`/datasets/${encodeURIComponent(name)}/load`, { method: "POST" })
+      .then(r => r.json())
+      .then(d => { if (d.ok) pollStatus(); });
   }
 }
 
-async function createDataset() {
-  const input = document.getElementById('new-ds-name');
+function createDataset() {
+  const input = document.getElementById("new-ds-name");
   const name  = input.value.trim();
   if (!name) return;
-  const d = await api('/datasets/create', {method:'POST', body:{name}});
-  if (d.error) { alert(d.error); return; }
-  input.value = '';
-  refreshDatasets();
-  selectDataset(name, false);
+  fetch("/datasets/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name })
+  }).then(r => r.json()).then(d => {
+    if (d.error) { alert(d.error); return; }
+    input.value = "";
+    refreshDatasets();
+    selectDataset(name, false);
+  });
 }
 
 // ── Upload ────────────────────────────────────────────────────────────────────
-// pywebview provides a native file/folder picker dialog.
-function pickAndUpload(isFolder) {
-  if (!activeDataset) return;
-  const input = document.createElement('input');
-  input.type = 'file';
-  if (isFolder) { input.webkitdirectory = true; input.multiple = true; }
-  else { input.multiple = true; input.accept = '.pdf,.docx,.doc,.pptx,.ppt,.csv,.xlsx,.xls,.txt,.md,.rtf,.eml,.msg,.png,.jpg,.jpeg,.tif,.tiff,.bmp'; }
-  input.onchange = async () => {
-    const files = Array.from(input.files);
-    if (!files.length) return;
-    const statusEl = document.getElementById('upload-status');
-    const progWrap = document.getElementById('upload-prog-wrap');
-    const progBar  = document.getElementById('upload-prog-bar');
-    statusEl.textContent = `Uploading ${files.length} file${files.length!==1?'s':''}…`;
-    progWrap.style.display = 'block'; progBar.style.width = '0%'; progBar.style.backgroundColor = '#ef4444';
-    const BATCH = 20; let saved = [], done = 0;
-    for (let i = 0; i < files.length; i += BATCH) {
-      const batch = files.slice(i, i+BATCH);
-      const fd = new FormData();
-      fd.append('dataset', activeDataset);
-      batch.forEach(f => fd.append('files', f, f.webkitRelativePath || f.name));
-      const resp = await fetch('/upload', {method:'POST', body: fd});
-      const d = await resp.json();
-      if (d.error) { statusEl.textContent = 'Error: ' + d.error; progWrap.style.display='none'; return; }
-      saved = saved.concat(d.saved || []);
-      done += batch.length;
-      const pct = Math.round(done / files.length * 100);
-      progBar.style.width = pct + '%';
-      const r2 = Math.round(239 - (239-34)*(pct/100));
-      const g2 = Math.round(68  + (197-68)*(pct/100));
-      const b2 = Math.round(68  + (94-68) *(pct/100));
-      progBar.style.backgroundColor = `rgb(${r2},${g2},${b2})`;
-      statusEl.textContent = `Uploading… ${done} / ${files.length}`;
+const UPLOAD_BATCH = 50;
+
+async function uploadFiles(fileArr, preservePath) {
+  if (!activeDataset || !fileArr.length) return;
+  const total    = fileArr.length;
+  const statusEl = document.getElementById("upload-status");
+  const progWrap = document.getElementById("upload-prog-wrap");
+  const progBar  = document.getElementById("upload-prog-bar");
+  statusEl.textContent = `Uploading ${total} file${total !== 1 ? "s" : ""}…`;
+  progWrap.style.display = "block";
+  progBar.style.width    = "0%";
+  let uploaded = 0, allSaved = [];
+  for (let i = 0; i < fileArr.length; i += UPLOAD_BATCH) {
+    const batch = fileArr.slice(i, i + UPLOAD_BATCH);
+    const fd = new FormData();
+    for (const f of batch) {
+      const relPath = f._relPath || (preservePath && f.webkitRelativePath) || f.name;
+      fd.append("files", f, relPath);
     }
-    progBar.style.width = '100%'; progBar.style.backgroundColor = '#22c55e';
-    await new Promise(r => setTimeout(r, 600));
-    progWrap.style.display = 'none';
-    statusEl.textContent = `✓ ${saved.length} file${saved.length!==1?'s':''} uploaded`;
-    refreshDatasets();
-  };
-  input.click();
+    try {
+      const r = await fetch(`/datasets/${encodeURIComponent(activeDataset)}/upload`, { method: "POST", body: fd });
+      const d = await r.json();
+      if (d.ok) allSaved = allSaved.concat(d.saved || []);
+      else { statusEl.textContent = `Error: ${d.error}`; progWrap.style.display = "none"; return; }
+    } catch(err) { statusEl.textContent = `Network error: ${err.message}`; progWrap.style.display = "none"; return; }
+    uploaded += batch.length;
+    progBar.style.width = Math.round(uploaded / total * 100) + "%";
+    statusEl.textContent = `Uploading… ${uploaded} / ${total}`;
+  }
+  progWrap.style.display = "none";
+  const folders = new Set(allSaved.map(p => p.includes("/") ? p.split("/")[0] : null).filter(Boolean));
+  statusEl.textContent = `✓ ${allSaved.length} file${allSaved.length !== 1 ? "s" : ""} uploaded` +
+    (folders.size ? ` (${folders.size} folder${folders.size !== 1 ? "s" : ""})` : "");
+  refreshDatasets();
 }
 
-// Drag-and-drop is not supported in pywebview — show a friendly message
-// drag and drop not supported in browser file input mode
+async function _readEntry(entry, basePath) {
+  return new Promise(resolve => {
+    if (entry.isFile) {
+      entry.file(file => { file._relPath = basePath + file.name; resolve([file]); }, () => resolve([]));
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const readAll = (acc) => {
+        reader.readEntries(async entries => {
+          if (!entries.length) {
+            const nested = await Promise.all(acc.map(e => _readEntry(e, basePath + entry.name + "/")));
+            resolve(nested.flat());
+          } else { readAll([...acc, ...entries]); }
+        }, () => resolve([]));
+      };
+      readAll([]);
+    } else { resolve([]); }
+  });
+}
 
-async function indexDataset() {
+async function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById("drop-zone").classList.remove("drag");
+  const items = e.dataTransfer.items;
+  if (items && items.length) {
+    const allFiles = [];
+    for (const item of Array.from(items)) {
+      const entry = item.webkitGetAsEntry ? item.webkitGetAsEntry() : null;
+      if (entry) { const files = await _readEntry(entry, ""); allFiles.push(...files); }
+      else { const f = item.getAsFile ? item.getAsFile() : null; if (f) allFiles.push(f); }
+    }
+    if (allFiles.length) { uploadFiles(allFiles, true); return; }
+  }
+  uploadFiles(Array.from(e.dataTransfer.files), false);
+}
+
+function indexDataset() {
   if (!activeDataset) return;
-  const d = await api('/index/build', {method:'POST', body:{dataset:activeDataset}});
-  if (d.error) { alert(d.error); return; }
-  pollStatus();
+  fetch(`/datasets/${encodeURIComponent(activeDataset)}/index`, { method: "POST" })
+    .then(() => pollStatus());
 }
 
 // ── Search terms ──────────────────────────────────────────────────────────────
-function addTerm(value = '') {
-  const row = document.createElement('div');
-  row.className = 'term-row';
+function addTerm(value = "") {
+  const row = document.createElement("div");
+  row.className = "term-row";
   row.innerHTML = `
     <input type="text" placeholder='e.g. "project plan" AND NOT cancelled' value="${esc(value)}"
       onkeydown="if(event.key==='Enter') doSearch()">
     <button class="remove" onclick="this.parentElement.remove()">×</button>`;
-  document.getElementById('terms-container').appendChild(row);
-  row.querySelector('input').focus();
+  document.getElementById("terms-container").appendChild(row);
+  row.querySelector("input").focus();
 }
 
 function getTerms() {
-  return [...document.querySelectorAll('.term-row input')]
-    .map(i => i.value.trim()).filter(Boolean);
+  return [...document.querySelectorAll(".term-row input")].map(i => i.value.trim()).filter(Boolean);
 }
 
 function clearTerms() {
-  document.getElementById('terms-container').innerHTML = '';
-  document.getElementById('results-area').innerHTML =
+  document.getElementById("terms-container").innerHTML = "";
+  document.getElementById("results-area").innerHTML =
     `<div class="empty-state"><div class="big-icon">⌕</div><p>Load a dataset and start searching</p></div>`;
-  document.getElementById('report-xlsx-btn').disabled = true;
-  document.getElementById('report-pdf-btn').disabled  = true;
+  document.getElementById("report-xlsx-btn").disabled = true;
+  document.getElementById("report-pdf-btn").disabled  = true;
   addTerm();
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
-async function doSearch() {
+function doSearch() {
   const terms = getTerms();
   if (!terms.length) return;
-  document.getElementById('loading').classList.add('show');
-  try {
-    const data = await api('/search', {method:'POST', body:{terms}});
-    if (data.error) { alert('Search error: ' + data.error); return; }
+  document.getElementById("loading").classList.add("show");
+  fetch("/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ terms })
+  })
+  .then(r => r.json())
+  .then(data => {
     currentResults = data.results;
     renderResults(data);
-    document.getElementById('report-xlsx-btn').disabled = false;
-    document.getElementById('report-pdf-btn').disabled  = false;
-  } catch(e) {
-    alert('Search error: ' + e);
-  } finally {
-    document.getElementById('loading').classList.remove('show');
-  }
+    document.getElementById("report-xlsx-btn").disabled = false;
+    document.getElementById("report-pdf-btn").disabled  = false;
+  })
+  .catch(e => alert("Search error: " + e))
+  .finally(() => document.getElementById("loading").classList.remove("show"));
 }
 
 function renderResults(data) {
-  const area = document.getElementById('results-area');
-  area.innerHTML = '';
+  const area = document.getElementById("results-area");
+  area.innerHTML = "";
   const terms = Object.keys(data.results || {});
   if (!terms.length) {
     area.innerHTML = `<div class="empty-state"><div class="big-icon">🤷</div><p>No terms searched</p></div>`;
@@ -1104,22 +531,20 @@ function renderResults(data) {
   terms.forEach(term => {
     const r    = data.results[term];
     const hits = r.total_hits || 0;
-    const card = document.createElement('div');
-    card.className = 'result-card';
+    const card = document.createElement("div");
+    card.className = "result-card";
     card.innerHTML = `
       <div class="result-header" onclick="toggleCard(this)">
         <span class="result-term">${esc(term)}</span>
-        <span class="badge ${hits===0?'zero':''}"> ${hits.toLocaleString()} chunk${hits!==1?'s':''}</span>
+        <span class="badge ${hits===0?'zero':''}">${hits.toLocaleString()} chunk${hits!==1?'s':''}</span>
         <span class="chevron">▶</span>
       </div>
       <div class="result-body">
         <div class="result-body-inner">
-          ${r.error ? `<p style="color:var(--danger)">Error: ${esc(r.error)}</p>` : ''}
+          ${r.error ? `<p style="color:var(--danger)">Error: ${esc(r.error)}</p>` : ""}
           ${hits > 0 ? `
           <div class="export-row">
-            <button class="btn btn-export" onclick='doExport(${JSON.stringify(term)})'>
-              ↓ Export PDF
-            </button>
+            <button class="btn btn-accent2" onclick='doExport(${JSON.stringify(term)})'>↓ Export PDF</button>
           </div>
           <table>
             <thead><tr><th>File</th><th>Matching chunks</th><th>#</th></tr></thead>
@@ -1131,10 +556,12 @@ function renderResults(data) {
                     const pageMatch = c.match(/^p(\d+)$/);
                     const pageNum   = pageMatch ? parseInt(pageMatch[1]) : null;
                     const dataset   = data.dataset || activeDataset;
-                    return `<span class="chunk-tag" onclick="openFile('${esc(dataset)}','${esc(d.name)}',${pageNum||'null'})" title="Open ${esc(d.name)} at ${esc(c)}">${esc(c)}</span>`;
-                  }).join('')}</td>
+                    const docPath   = d.name.replace(/\\/g, '/');
+                    const url       = `/preview/${encodeURIComponent(dataset)}/${docPath.split('/').map(encodeURIComponent).join('/')}${pageNum ? '#page=' + pageNum : ''}`;
+                    return `<a class="chunk-tag" href="${url}" target="_blank" title="Open ${esc(d.name)} at ${c}">${esc(c)}</a>`;
+                  }).join("")}</td>
                   <td>${d.chunks.length}</td>
-                </tr>`).join('')}
+                </tr>`).join("")}
             </tbody>
           </table>` : `<div class="no-results">No matches found</div>`}
         </div>
@@ -1145,58 +572,54 @@ function renderResults(data) {
 
 function toggleCard(header) {
   const body = header.nextElementSibling;
-  const chev = header.querySelector('.chevron');
-  const open = body.classList.toggle('open');
-  chev.classList.toggle('open', open);
+  const chev = header.querySelector(".chevron");
+  const open = body.classList.toggle("open");
+  chev.classList.toggle("open", open);
 }
 
-function openFile(dataset, docName, pageNum) {
-  const url = '/preview/' + encodeURIComponent(dataset) + '/' + docName.split('/').map(encodeURIComponent).join('/') + (pageNum ? '#page=' + pageNum : '');
-  window.open(url, '_blank');
+function doHitReport(fmt) {
+  if (!currentResults || !Object.keys(currentResults).length) { alert("Run a search first."); return; }
+  document.getElementById("loading").classList.add("show");
+  fetch("/hit_report", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ results: currentResults, format: fmt })
+  })
+  .then(resp => { if (!resp.ok) return resp.json().then(e => { throw new Error(e.error); }); return resp.blob(); })
+  .then(blob => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `hit_report.${fmt === "pdf" ? "pdf" : "xlsx"}`;
+    a.click();
+  })
+  .catch(e => alert("Hit report error: " + e.message))
+  .finally(() => document.getElementById("loading").classList.remove("show"));
 }
 
-async function doHitReport(fmt) {
-  if (!currentResults || !Object.keys(currentResults).length) {
-    alert('Run a search first.');
-    return;
-  }
-  document.getElementById('loading').classList.add('show');
-  try {
-    // Download hit report
-    const resp = await fetch('/export/hit_report', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({results: currentResults, fmt})});
-    if (!resp.ok) { alert('Export error'); return; }
-    const blob = await resp.blob();
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hit_report.xlsx'; a.click();
-    return;
-    if (d.error) alert('Hit report error: ' + d.error);
-    // File opens automatically in system viewer
-  } catch(e) {
-    alert('Hit report error: ' + e);
-  } finally {
-    document.getElementById('loading').classList.remove('show');
-  }
-}
-
-async function doExport(term) {
+function doExport(term) {
   const r = currentResults[term];
   if (!r) return;
-  alert('Use Hit Report to export search results.');
-  if (d.error) alert('Export error: ' + d.error);
+  fetch("/export", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ term, docs: r.docs })
+  })
+  .then(resp => { if (!resp.ok) return resp.json().then(e => { throw new Error(e.error); }); return resp.blob(); })
+  .then(blob => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `search_${term.replace(/[^a-zA-Z0-9_\- ]/g,"_").slice(0,50)}.pdf`;
+    a.click();
+  })
+  .catch(e => alert("Export error: " + e.message));
 }
 
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-addTerm();
-refreshDatasets();
-pollStatus();
-
-// ── Help modal ────────────────────────────────────────────
-function toggleHelp() {
-  document.getElementById('help-overlay').classList.toggle('show');
-}
+// ── Help modal ────────────────────────────────────────────────────────────────
+function toggleHelp() { document.getElementById('help-overlay').classList.toggle('show'); }
 function switchHelpTab(tab) {
   document.querySelectorAll('.help-tab').forEach((t, i) => {
     const tabs = ['index','production','redactions','syntax'];
@@ -1209,7 +632,12 @@ function switchHelpTab(tab) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') document.getElementById('help-overlay').classList.remove('show');
 });
+
+addTerm();
+refreshDatasets();
+pollStatus();
 </script>
+
 <!-- Help modal -->
 <div class="help-overlay" id="help-overlay" onclick="if(event.target===this)toggleHelp()">
   <div class="help-modal">
@@ -1224,7 +652,6 @@ document.addEventListener('keydown', e => {
       <button class="help-tab" onclick="switchHelpTab('syntax')">Search Syntax</button>
     </div>
     <div class="help-body">
-
       <div class="help-panel active" id="help-index">
         <div class="help-section">
           <h3>What is the Index tab?</h3>
@@ -1234,49 +661,45 @@ document.addEventListener('keydown', e => {
           <h3>Getting started</h3>
           <div class="help-steps">
             <div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Create a production</strong> — type a name in the sidebar and click +. One production per case or production set.</div></div>
-            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Add files</strong> — click <strong>Add Files</strong> to pick individual documents, or <strong>Add Folder</strong> to import an entire folder including subfolders. Supports PDF, DOCX, XLSX, CSV, EML, MSG, PPTX, TXT, and images.</div></div>
+            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Add files</strong> — click <strong>Files</strong> to pick individual documents, or <strong>Folder</strong> to import an entire folder. Supports PDF, DOCX, XLSX, CSV, EML, MSG, PPTX, TXT, and images.</div></div>
             <div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Build Index</strong> — click <strong>⚡ Build Index</strong>. Strata reads every document and builds a searchable index. This only needs to happen once per production.</div></div>
-            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Search</strong> — enter your search terms, one per row, and click Search. Each term is searched independently.</div></div>
-            <div class="help-step"><div class="step-num">5</div><div class="step-text"><strong>Export</strong> — click <strong>Hit Report</strong> to generate an Excel or PDF report showing exactly which documents and pages each term hit on.</div></div>
+            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Search</strong> — enter your search terms, one per row, and click Search.</div></div>
+            <div class="help-step"><div class="step-num">5</div><div class="step-text"><strong>Export</strong> — click <strong>Hit Report</strong> to generate an Excel or PDF report showing which documents and pages each term hit on.</div></div>
           </div>
           <div class="help-tip"><strong>Tip:</strong> Click any page tag (e.g. <span class="help-code">p14</span>) in the results to open that document directly at that page.</div>
         </div>
       </div>
-
       <div class="help-panel" id="help-production">
         <div class="help-section">
           <h3>What is the Production tab?</h3>
-          <p>The Production tab is for deposition prep and document packet building. Search for specific terms — witness names, email addresses, key events — then hand-pick the documents you want and export them as a ZIP with a responsiveness log.</p>
+          <p>The Production tab is for deposition prep and document packet building. Search for specific terms, hand-pick responsive documents, and export them as a ZIP with a responsiveness log.</p>
         </div>
         <div class="help-section">
           <h3>How to build a document packet</h3>
           <div class="help-steps">
-            <div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select your production</strong> — choose an indexed production from the dropdown. It auto-selects if you already have one loaded.</div></div>
-            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Enter search terms</strong> — use witness names, email addresses, key dates, or case-specific phrases. Add multiple terms to find documents responsive to any of them.</div></div>
-            <div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Review results</strong> — documents are grouped by term. Check the boxes next to the ones you want to include in your packet.</div></div>
-            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export ZIP</strong> — click <strong>Export Selected</strong>. You get a ZIP containing the selected documents plus a responsiveness log showing which terms each document hit on and which pages.</div></div>
+            <div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select your production</strong> — choose an indexed production from the dropdown.</div></div>
+            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Enter search terms</strong> — witness names, email addresses, key dates, or phrases.</div></div>
+            <div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Review results</strong> — documents are grouped by term. Check the boxes next to the ones you want.</div></div>
+            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export ZIP</strong> — get a ZIP with selected documents plus a responsiveness log.</div></div>
           </div>
-          <div class="help-tip"><strong>Tip:</strong> Great for building witness-specific packets before depositions — search the witness's name, their email, and any key topics, then export everything responsive in one click.</div>
+          <div class="help-tip"><strong>Tip:</strong> Great for building witness-specific packets before depositions.</div>
         </div>
       </div>
-
       <div class="help-panel" id="help-redactions">
         <div class="help-section">
           <h3>What is the Redactions tab?</h3>
-          <p>The Redactions tab scans a production for documents containing redactions — black bars and electronic PDF redaction annotations — and tells you exactly which pages they appear on. Useful for identifying what opposing counsel has withheld and flagging anything worth challenging.</p>
+          <p>The Redactions tab scans a production for documents containing redactions — black bars and PDF redaction annotations — and tells you exactly which pages they appear on.</p>
         </div>
         <div class="help-section">
           <h3>How to run a scan</h3>
           <div class="help-steps">
-            <div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select a production</strong> — choose from the dropdown. The production does not need to be indexed first.</div></div>
-            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Start Scan</strong> — Strata scans every PDF and Word document in the production for redaction markers.</div></div>
-            <div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Review findings</strong> — each document with redactions is listed with the page numbers and type of redaction detected.</div></div>
-            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export</strong> — export a findings list as Excel, a full report as PDF, or a ZIP of all redacted documents.</div></div>
+            <div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select a production</strong> — choose from the dropdown. Does not need to be indexed first.</div></div>
+            <div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Start Scan</strong> — Strata scans every PDF and Word document for redaction markers.</div></div>
+            <div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Review findings</strong> — each document with redactions is listed with page numbers and type.</div></div>
+            <div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export</strong> — export a findings list, full report, or ZIP of all redacted documents.</div></div>
           </div>
-          <div class="help-tip"><strong>Note:</strong> Strata detects black redaction bars and official PDF /Redact annotations. It does not detect white-out or correction fluid on scanned documents.</div>
         </div>
       </div>
-
       <div class="help-panel" id="help-syntax">
         <div class="help-section">
           <h3>Boolean operators</h3>
@@ -1288,11 +711,11 @@ document.addEventListener('keydown', e => {
           </div>
         </div>
         <div class="help-section">
-          <h3>Phrases, wildcards & fuzzy</h3>
+          <h3>Phrases, wildcards &amp; fuzzy</h3>
           <div class="help-steps">
-            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"wrongful termination"</span> — exact phrase match</div></div>
-            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">terminat*</span> — wildcard, matches terminate, termination, terminated</div></div>
-            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">~termination</span> — fuzzy match, catches misspellings</div></div>
+            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"wrongful termination"</span> — exact phrase</div></div>
+            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">terminat*</span> — wildcard: terminate, termination, terminated</div></div>
+            <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">~termination</span> — fuzzy, catches misspellings</div></div>
           </div>
         </div>
         <div class="help-section">
@@ -1301,10 +724,9 @@ document.addEventListener('keydown', e => {
             <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"fired" W/10 "email"</span> — fired within 10 words of email</div></div>
             <div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"Smith" W/5 "contract"</span> — Smith within 5 words of contract</div></div>
           </div>
-          <div class="help-tip"><strong>Tip:</strong> You can combine operators: <span class="help-code">"John Smith" AND (fired OR terminated) AND NOT severance</span></div>
+          <div class="help-tip"><strong>Tip:</strong> Combine operators: <span class="help-code">"John Smith" AND (fired OR terminated) AND NOT severance</span></div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
