@@ -1,0 +1,81 @@
+name: Build Strata
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  # ── Windows ──────────────────────────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller pywebview pdfplumber pypdf python-docx openpyxl
+          pip install reportlab python-pptx extract-msg pillow pytesseract pdf2image
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes
+        shell: cmd
+
+      - name: Build
+        run: |
+          pyinstaller universal_search.spec --noconfirm
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+        shell: cmd
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Strata-Windows
+          path: dist\Strata_Setup.exe
+          retention-days: 30
+
+  # ── macOS ─────────────────────────────────────────────────────────────────────
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller pywebview pdfplumber pypdf python-docx openpyxl
+          pip install reportlab python-pptx extract-msg pillow pytesseract pdf2image
+          brew install tesseract
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Build
+        run: pyinstaller universal_search.spec --noconfirm
+
+      - name: Package DMG
+        run: |
+          create-dmg \
+            --volname "Strata" \
+            --window-pos 200 120 \
+            --window-size 540 360 \
+            --icon-size 128 \
+            --icon "Strata.app" 160 180 \
+            --app-drop-link 380 180 \
+            "dist/Strata.dmg" \
+            "dist/Strata.app" || true
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Strata-Mac
+          path: dist/Strata.dmg
+          retention-days: 30
