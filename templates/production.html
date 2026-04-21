@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" href="/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strata</title>
+<title>Strata — Production</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -479,9 +477,9 @@ input[type="checkbox"] {
     <span class="logo-name">Strata</span>
   </div>
   <nav>
-    <a href="#" href="/" class="nav-link">Index</a>
+    <a href="#" onclick="navigate('index.html')" class="nav-link">Index</a>
     <a href="#" class="nav-link active">Production</a>
-    <a href="#" href="/redactions" class="nav-link">Redactions</a>
+    <a href="#" onclick="navigate('redactions.html')" class="nav-link">Redactions</a>
   </nav>
   <button class="help-btn" onclick="toggleHelp()" title="How to use Strata">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -553,28 +551,84 @@ input[type="checkbox"] {
 <div id="loading"><div class="spinner-ring"></div></div>
 
 <script>
-// ── Flask fetch wrapper ──────────────────────────────────────────────────────
-// Flask API wrapper
-async function api(method, options = {}) {
-  const resp = await fetch(method, {
-    method: options.method || 'GET',
-    headers: options.body ? {'Content-Type': 'application/json'} : {},
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({error: resp.statusText}));
-    throw new Error(err.error || resp.statusText);
+// ── Flask fetch API bridge ────────────────────────────────────────────────────
+const JSON_HEADERS = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+
+async function safeJson(resp) {
+  const text = await resp.text();
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    console.error('Non-JSON response from', resp.url, ':', text.slice(0, 200));
+    throw new Error('Server returned HTML instead of JSON. Check Flask is running and the route exists.');
   }
-  return resp.json();
 }
 
+async function api(method, ...args) {
+  // Map pywebview method names to Flask REST endpoints
+  switch (method) {
+
+    case 'get_datasets':
+      return safeJson(await fetch('/datasets', { headers: { 'Accept': 'application/json' } }))
+        .then(list => ({ datasets: list }));
+
+    case 'get_index_status':
+      return safeJson(await fetch('/index/status', { headers: { 'Accept': 'application/json' } }));
+
+    case 'production_search': {
+      const [dataset, terms] = args;
+      return safeJson(await fetch('/production/search', {
+        method: 'POST',
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ dataset, terms })
+      }));
+    }
+
+    case 'export_production_zip': {
+      const [dataset, selections] = args;
+      const resp = await fetch('/production/export_zip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataset, selections })
+      });
+      if (!resp.ok) { const e = await resp.json(); return { error: e.error || 'Export failed' }; }
+      const blob = await resp.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `production_export.zip`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      return { ok: true };
+    }
+
+    case 'open_file': {
+      // In the browser we can't open local files; navigate to the preview route instead
+      const [dataset, docName] = args;
+      const path = docName.split('/').map(encodeURIComponent).join('/');
+      window.open(`/preview/${encodeURIComponent(dataset)}/${path}`, '_blank');
+      return { ok: true };
+    }
+
+    default:
+      console.warn('Unknown API method:', method, args);
+      return { error: 'Not implemented: ' + method };
+  }
+}
+
+function navigate(page) {
+  // Map .html filenames to Flask routes
+  const routes = { 'index.html': '/', 'production.html': '/production', 'redactions.html': '/redactions' };
+  window.location.href = routes[page] || ('/' + page);
+}
 
 let prodDataset  = "";
 let prodResults  = {};     // { term: { total_hits, docs: [{name, chunks}] } }
 let selectedDocs = {};     // { rel_path: { terms: Set, chunks: Set } }
 
-function openFile(dataset, docName, pageNum) {
-  window.open('/preview/' + encodeURIComponent(dataset) + '/' + docName.split('/').map(encodeURIComponent).join('/') + (pageNum ? '#page='+pageNum : ''), '_blank');
+async function openFile(dataset, docName, pageNum) {
+  const d = await api('open_file', dataset, docName, pageNum);
+  if (d && d.error) alert('Could not open file: ' + d.error);
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────
@@ -583,10 +637,10 @@ async function init() {
   try {
     // Load datasets and index status in parallel
     const [dsResp, statusResp] = await Promise.all([
-      api('/datasets'),
-      api('/index/status')
+      api('get_datasets'),
+      api('get_index_status')
     ]);
-    const datasets = Array.isArray(dsResp) ? dsResp : (dsResp.datasets || []);
+    const datasets = dsResp.datasets || [];
     const loaded   = statusResp.loaded || null;
     const sel = document.getElementById('dataset-select');
     const indexed = datasets.filter(ds => ds.indexed);
@@ -612,6 +666,8 @@ async function init() {
     }
   } catch(e) {
     console.error('Init error:', e);
+    document.getElementById('prod-empty').innerHTML =
+      `<div class="big-icon">⚠</div><p style="color:var(--danger);font-family:var(--mono);font-size:0.8rem">${e.message}</p>`;
   }
 }
 
@@ -652,8 +708,8 @@ async function doProdSearch() {
 
   document.getElementById("loading").classList.add("show");
   try {
-    const data = await api('/production/search', {method:'POST', body:{dataset:prodDataset, terms}});
-    if (data.error) { alert('Search error: ' + data.error); return; }
+    const data = await api('production_search', prodDataset, terms);
+    if (data.error) { alert("Search error: " + data.error); return; }
     prodResults  = data.results;
     selectedDocs = {};
     updateSelectBar();
@@ -868,10 +924,9 @@ async function doExportZip() {
 
   document.getElementById("loading").classList.add("show");
   try {
-    const resp = await fetch('/production/export_zip', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({dataset:prodDataset, selections})});
-    if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.error||'Export failed'); }
-    const blob = await resp.blob();
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'production_export.zip'; a.click();
+    const d = await api('export_production_zip', prodDataset, selections);
+    if (d.error) throw new Error(d.error);
+    // File opens automatically in system file manager
   } catch(e) {
     alert("Export error: " + e.message);
   } finally {

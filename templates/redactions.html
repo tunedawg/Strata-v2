@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" href="/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strata</title>
+<title>Strata — Redactions</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -358,8 +356,8 @@ tr:hover td { background: rgba(255,255,255,0.015); }
     <span class="logo-name">Strata</span>
   </div>
   <nav>
-    <a href="#" href="/" class="nav-link">Index</a>
-    <a href="#" href="/production" class="nav-link">Production</a>
+    <a href="#" onclick="navigate('index.html')" class="nav-link">Index</a>
+    <a href="#" onclick="navigate('production.html')" class="nav-link">Production</a>
     <a href="#" class="nav-link active">Redactions</a>
   </nav>
   <button class="help-btn" onclick="toggleHelp()" title="How to use Strata">
@@ -483,18 +481,95 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 <div id="loading"><div class="spinner-ring"></div></div>
 
 <script>
-// Flask API wrapper
-async function api(method, options = {}) {
-  const resp = await fetch(method, {
-    method: options.method || 'GET',
-    headers: options.body ? {'Content-Type': 'application/json'} : {},
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({error: resp.statusText}));
-    throw new Error(err.error || resp.statusText);
+// ── Flask fetch API bridge ────────────────────────────────────────────────────
+const JSON_HEADERS = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+
+async function safeJson(resp) {
+  const text = await resp.text();
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    console.error('Non-JSON response from', resp.url, ':', text.slice(0, 200));
+    throw new Error('Server returned HTML instead of JSON. Check Flask is running and the route exists.');
   }
-  return resp.json();
+}
+
+async function api(method, ...args) {
+  switch (method) {
+
+    case 'get_datasets':
+      return safeJson(await fetch('/datasets', { headers: { 'Accept': 'application/json' } }))
+        .then(list => ({ datasets: list }));
+
+    case 'get_index_status':
+      return safeJson(await fetch('/index/status', { headers: { 'Accept': 'application/json' } }));
+
+    case 'start_redaction_scan': {
+      const [dataset] = args;
+      return safeJson(await fetch('/redactions/scan', {
+        method: 'POST',
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ dataset })
+      }));
+    }
+
+    case 'get_redaction_status':
+      return safeJson(await fetch('/redactions/status', { headers: { 'Accept': 'application/json' } }));
+
+    case 'get_redaction_results':
+      return safeJson(await fetch('/redactions/results', { headers: { 'Accept': 'application/json' } }));
+
+    case 'cancel_redaction_scan':
+      return safeJson(await fetch('/redactions/cancel', { method: 'POST', headers: JSON_HEADERS }));
+
+    case 'export_redaction_zip': {
+      const resp = await fetch('/redactions/export_zip', { method: 'POST' });
+      if (!resp.ok) { const e = await resp.json(); return { error: e.error || 'Export failed' }; }
+      const blob = await resp.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'redacted_docs.zip';
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      return { ok: true };
+    }
+
+    case 'export_redaction_list': {
+      const resp = await fetch('/redactions/export_list', { method: 'POST' });
+      if (!resp.ok) { const e = await resp.json(); return { error: e.error || 'Export failed' }; }
+      const blob = await resp.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'redaction_findings.xlsx';
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      return { ok: true };
+    }
+
+    case 'export_redaction_report': {
+      const [fmt] = args;
+      const resp = await fetch(`/redactions/export_report?format=${fmt || 'xlsx'}`, { method: 'POST' });
+      if (!resp.ok) { const e = await resp.json(); return { error: e.error || 'Export failed' }; }
+      const blob = await resp.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `redaction_report.${fmt || 'xlsx'}`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      return { ok: true };
+    }
+
+    case 'open_file': {
+      const [dataset, docName] = args;
+      const path = docName.split('/').map(encodeURIComponent).join('/');
+      window.open(`/preview/${encodeURIComponent(dataset)}/${path}`, '_blank');
+      return { ok: true };
+    }
+
+    default:
+      console.warn('Unknown API method:', method, args);
+      return { error: 'Not implemented: ' + method };
+  }
 }
 
 /* ─────────────────────────────────────────
@@ -507,18 +582,21 @@ let scanDataset  = "";
 /* ─────────────────────────────────────────
    Init
 ───────────────────────────────────────── */
-window.addEventListener('DOMContentLoaded', () => {
-  loadDatasets();
-});
+window.addEventListener('DOMContentLoaded', () => { loadDatasets(); });
+
+function navigate(page) {
+  const routes = { 'index.html': '/', 'production.html': '/production', 'redactions.html': '/redactions' };
+  window.location.href = routes[page] || ('/' + page);
+}
 
 async function loadDatasets() {
   try {
     const [_dsresp, _status] = await Promise.all([
-      api('/datasets'),
-      api('/index/status')
+      api('get_datasets'),
+      api('get_index_status')
     ]);
     const sel    = document.getElementById('dataset-select');
-    const list   = Array.isArray(_dsresp) ? _dsresp : (_dsresp.datasets || []);
+    const list   = _dsresp.datasets || [];
     const loaded = _status.loaded || null;
     const indexed = list.filter(d => typeof d === 'object' ? d.indexed : true);
     if (!indexed.length) {
@@ -565,7 +643,7 @@ async function startScan() {
   showProgress(true);
 
   try {
-    const d = await api('/redactions/scan', {method:'POST', body:{dataset:ds}});
+    const d = await api('start_redaction_scan', ds);
     if (d.status === 'started' || d.status === 'running' || d.ok) {
       pollTimer = setInterval(pollStatus, 1200);
     } else {
@@ -580,7 +658,7 @@ async function startScan() {
 
 async function pollStatus() {
   try {
-    const d = await api('/redactions/status');
+    const d = await api('get_redaction_status');
 
     const pct = d.percent || 0;
     document.getElementById('prog-bar').style.width = pct + '%';
@@ -607,13 +685,13 @@ async function pollStatus() {
 }
 
 async function cancelScan() {
-  try { await api('/redactions/cancel', {method:'POST'}); }
+  try { await api('cancel_redaction_scan'); }
   catch(e) {}
 }
 
 async function loadResults() {
   try {
-    const data = await api('/redactions/results');
+    const data = await api('get_redaction_results');
     scanResults = data;
     renderResults(data);
     resetScanUI();
@@ -778,9 +856,9 @@ async function exportZip() {
   if (!scanResults) return;
   showLoading(true);
   try {
-    const _ezr = await fetch('/redactions/export_zip', {method:'POST'});
-    if (!_ezr.ok) { showError('Export failed'); return; }
-    const _ezb = await _ezr.blob(); const _eza = document.createElement('a'); _eza.href=URL.createObjectURL(_ezb); _eza.download='redacted_docs.zip'; _eza.click();
+    const _ez = await api('export_redaction_zip');
+    if (_ez.error) showError(_ez.error);
+    // file opens automatically
   } catch(e) { showError(e.message); }
   showLoading(false);
 }
@@ -789,9 +867,9 @@ async function exportList() {
   if (!scanResults) return;
   showLoading(true);
   try {
-    const _elr = await fetch('/redactions/export_list', {method:'POST'});
-    if (!_elr.ok) { showError('Export failed'); return; }
-    const _elb = await _elr.blob(); const _ela = document.createElement('a'); _ela.href=URL.createObjectURL(_elb); _ela.download='redaction_findings.xlsx'; _ela.click();
+    const _el = await api('export_redaction_list');
+    if (_el.error) showError(_el.error);
+    // file opens automatically
   } catch(e) { showError(e.message); }
   showLoading(false);
 }
@@ -800,9 +878,9 @@ async function exportReportXlsx() {
   if (!scanResults) return;
   showLoading(true);
   try {
-    const _erxr = await fetch('/redactions/export_report?format=xlsx', {method:'POST'});
-    if (!_erxr.ok) { showError('Export failed'); return; }
-    const _erxb = await _erxr.blob(); const _erxa = document.createElement('a'); _erxa.href=URL.createObjectURL(_erxb); _erxa.download='redaction_report.xlsx'; _erxa.click();
+    const _erx = await api('export_redaction_report', 'xlsx');
+    if (_erx.error) showError(_erx.error);
+    // file opens automatically
   } catch(e) { showError(e.message); }
   showLoading(false);
 }
@@ -811,9 +889,9 @@ async function exportReportPdf() {
   if (!scanResults) return;
   showLoading(true);
   try {
-    const _erpr = await fetch('/redactions/export_report?format=pdf', {method:'POST'});
-    if (!_erpr.ok) { showError('Export failed'); return; }
-    const _erpb = await _erpr.blob(); const _erpa = document.createElement('a'); _erpa.href=URL.createObjectURL(_erpb); _erpa.download='redaction_report.xlsx'; _erpa.click();
+    const _erp = await api('export_redaction_report', 'pdf');
+    if (_erp.error) showError(_erp.error);
+    // file opens automatically
   } catch(e) { showError(e.message); }
   showLoading(false);
 }
@@ -855,9 +933,10 @@ function esc(s) {
   if (s == null) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function openFile(dataset, docName, pageNum) {
+async function openFile(dataset, docName, pageNum) {
   if (!dataset || !docName) return;
-  window.open('/preview/' + encodeURIComponent(dataset) + '/' + docName.split('/').map(encodeURIComponent).join('/') + (pageNum ? '#page='+pageNum : ''), '_blank');
+  const d = await api('open_file', dataset, docName, pageNum);
+  if (d && d.error) alert('Could not open file: ' + d.error);
 }
 
 
