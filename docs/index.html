@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strata — Legal Document Search</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #080a0f;
+  --surface:  #0f1118;
+  --surface2: #161b26;
+  --border:   rgba(255,255,255,0.07);
+  --blue:     #3b82f6;
+  --blue-hi:  #60a5fa;
+  --blue-lo:  rgba(59,130,246,0.1);
+  --text:     #f1f5f9;
+  --text2:    #64748b;
+  --text3:    #334155;
+  --serif:    'DM Serif Display', Georgia, serif;
+  --sans:     'DM Sans', sans-serif;
+  --mono:     'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Noise texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 48px;
+  height: 64px;
+  background: rgba(8,10,15,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-logo svg { width: 28px; height: 28px; }
+.nav-logo-name {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-left: auto;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 0.85rem;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  margin-left: 32px;
+  padding: 8px 20px;
+  background: var(--blue);
+  color: white !important;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.85rem !important;
+  transition: background 0.15s !important;
+}
+.nav-cta:hover { background: var(--blue-hi) !important; color: white !important; }
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow behind hero */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(59,130,246,0.25);
+  border-radius: 20px;
+  background: rgba(59,130,246,0.06);
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  color: var(--blue-hi);
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: pulse 2s infinite;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 820px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--blue-hi);
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  font-weight: 300;
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--blue-hi); transform: translateY(-1px); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--surface2);
+  color: var(--text2);
+  text-decoration: none;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+/* ── App screenshot mock ── */
+.hero-visual {
+  margin-top: 80px;
+  width: 100%;
+  max-width: 1000px;
+  animation: fadeUp 0.8s ease 0.4s both;
+  position: relative;
+}
+.screen-frame {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.screen-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+}
+.screen-dot { width: 10px; height: 10px; border-radius: 50%; }
+.screen-dot.r { background: #ff5f57; }
+.screen-dot.y { background: #febc2e; }
+.screen-dot.g { background: #28c840; }
+.screen-title {
+  margin: 0 auto;
+  font-size: 0.72rem;
+  font-family: var(--mono);
+  color: var(--text3);
+}
+.screen-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 420px;
+}
+.screen-sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 16px;
+}
+.screen-sidebar-label {
+  font-size: 0.6rem;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.screen-ds-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.screen-ds-item.active {
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.screen-ds-icon {
+  width: 24px; height: 24px;
+  border-radius: 4px;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+.screen-ds-name { font-size: 0.75rem; font-weight: 500; color: var(--text); }
+.screen-ds-meta { font-size: 0.6rem; color: var(--text2); font-family: var(--mono); }
+.screen-main {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.screen-search-label {
+  font-size: 0.6rem;
+  font-family: var(--mono);
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.screen-search-input {
+  padding: 9px 14px;
+  background: var(--surface);
+  border: 1px solid rgba(59,130,246,0.4);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--blue-hi);
+}
+.screen-result {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.screen-result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.screen-result-term { font-family: var(--mono); font-size: 0.75rem; color: var(--text); flex: 1; }
+.screen-result-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(59,130,246,0.12);
+  color: var(--blue-hi);
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.screen-result-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+}
+.screen-result-row:last-child { border-bottom: none; }
+.screen-file { color: var(--text); font-weight: 500; flex: 1; }
+.screen-chunks { display: flex; gap: 4px; flex-wrap: wrap; }
+.screen-chunk {
+  padding: 1px 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--blue-hi);
+}
+
+/* ── Sections ── */
+section {
+  padding: 100px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.72rem;
+  font-family: var(--mono);
+  color: var(--blue-hi);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 1rem;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 560px;
+  font-weight: 300;
+}
+
+/* ── Features ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+
+.feature-card {
+  background: var(--surface);
+  padding: 36px 32px;
+  transition: background 0.2s;
+}
+.feature-card:hover { background: var(--surface2); }
+
+.feature-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--blue-lo);
+  border: 1px solid rgba(59,130,246,0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.feature-icon svg { width: 18px; height: 18px; color: var(--blue-hi); }
+
+.feature-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.feature-desc {
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ── How it works ── */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: start;
+  background: var(--surface);
+  padding: 36px 40px;
+  gap: 32px;
+  transition: background 0.2s;
+}
+.step:hover { background: var(--surface2); }
+
+.step-num {
+  font-family: var(--serif);
+  font-size: 3rem;
+  color: var(--text3);
+  line-height: 1;
+  font-style: italic;
+}
+
+.step-content h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.step-content p {
+  font-size: 0.85rem;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ── Syntax section ── */
+.syntax-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.syntax-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+.syntax-card h3 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+}
+.syntax-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.syntax-row:last-child { border-bottom: none; }
+.syntax-code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--blue-hi);
+  background: var(--blue-lo);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.syntax-desc {
+  font-size: 0.78rem;
+  color: var(--text2);
+}
+
+/* ── CTA section ── */
+.cta-section {
+  text-align: center;
+  padding: 100px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section .section-title { max-width: 600px; margin: 0 auto 16px; }
+.cta-section .section-sub { margin: 0 auto 40px; }
+.cta-os-note {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  color: var(--text3);
+}
+
+/* ── Contact ── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  margin-top: 60px;
+}
+
+.contact-info h3 {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.contact-info p {
+  font-size: 0.9rem;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text2);
+  font-size: 0.85rem;
+  transition: color 0.15s;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.contact-link:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+.contact-link svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--blue-hi); }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-group label {
+  font-size: 0.75rem;
+  font-family: var(--mono);
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.form-group input,
+.form-group textarea {
+  padding: 11px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: var(--sans);
+  transition: border-color 0.15s;
+  outline: none;
+  resize: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text3); }
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--blue); }
+
+.form-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.form-submit:hover { background: var(--blue-hi); }
+.form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 32px;
+  color: #34d399;
+  font-size: 0.9rem;
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-size: 0.8rem;
+  color: var(--text3);
+}
+footer a { color: var(--text3); text-decoration: none; }
+footer a:hover { color: var(--text2); }
+
+/* ── Divider ── */
+.full-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  section { padding: 60px 24px; }
+  .hero { padding: 100px 24px 60px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .syntax-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .step { grid-template-columns: 1fr; gap: 8px; }
+  .step-num { font-size: 2rem; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none">
+      <rect x="3" y="5"  width="22" height="5" rx="2.5" fill="#3b82f6" opacity="1"/>
+      <rect x="3" y="12" width="22" height="5" rx="2.5" fill="#3b82f6" opacity="0.6"/>
+      <rect x="3" y="19" width="22" height="5" rx="2.5" fill="#3b82f6" opacity="0.3"/>
+    </svg>
+    <span class="nav-logo-name">Strata</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#syntax">Search syntax</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="nav-cta">Download</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">The all-in-one production review tool</div>
+  <h1>Search any production.<br><em>In seconds.</em></h1>
+  <p>Strata is a desktop tool built for litigation — Boolean search, OCR indexing, redaction detection, and ESI hit reports across any production format. No subscriptions. No per-document or per-case fees. No cloud, so your files stay local, and your client data stays secure.</p>
+  <div class="hero-actions">
+    <a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download for Windows (.zip)
+    </a>
+    <a href="#" class="btn-primary" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);" title="Mac version coming soon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download for Mac
+    </a>
+    <a href="#features" class="btn-secondary">See features →</a>
+  </div>
+
+  <!-- App mock -->
+  <div class="hero-visual">
+    <div class="screen-frame">
+      <div class="screen-titlebar">
+        <div class="screen-dot r"></div>
+        <div class="screen-dot y"></div>
+        <div class="screen-dot g"></div>
+        <span class="screen-title">Strata</span>
+      </div>
+      <div class="screen-body">
+        <div class="screen-sidebar">
+          <div class="screen-sidebar-label">Productions</div>
+          <div class="screen-ds-item active">
+            <div class="screen-ds-icon">📚</div>
+            <div>
+              <div class="screen-ds-name">Holmes v. Moriarty</div>
+              <div class="screen-ds-meta">553,214 docs · indexed</div>
+            </div>
+          </div>
+          <div class="screen-ds-item">
+            <div class="screen-ds-icon">📁</div>
+            <div>
+              <div class="screen-ds-name">Adler Production</div>
+              <div class="screen-ds-meta">1,204 docs · indexed</div>
+            </div>
+          </div>
+        </div>
+        <div class="screen-main">
+          <div class="screen-search-label">Search Terms</div>
+          <div class="screen-search-input">"wrongful termination" AND NOT severance</div>
+          <div class="screen-result">
+            <div class="screen-result-header">
+              <span class="screen-result-term">"wrongful termination" AND NOT severance</span>
+              <span class="screen-result-badge">47 hits</span>
+            </div>
+            <div class="screen-result-row">
+              <span class="screen-file">Watson_termination_email_082023.pdf</span>
+              <div class="screen-chunks">
+                <span class="screen-chunk">p3</span>
+                <span class="screen-chunk">p7</span>
+                <span class="screen-chunk">p12</span>
+              </div>
+            </div>
+            <div class="screen-result-row">
+              <span class="screen-file">Lestrade_Inspector_HR_notes.docx</span>
+              <div class="screen-chunks">
+                <span class="screen-chunk">p1</span>
+                <span class="screen-chunk">p4</span>
+              </div>
+            </div>
+            <div class="screen-result-row">
+              <span class="screen-file">Moriarty_000374_texts.pdf</span>
+              <div class="screen-chunks">
+                <span class="screen-chunk">p2</span>
+                <span class="screen-chunk">p8</span>
+                <span class="screen-chunk">p15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- Features -->
+<section id="features">
+  <div class="reveal">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+    <p class="section-sub">Defendants bury documents deep in productions hoping you won't find them. Strata makes sure you do — without the enterprise price tag.</p>
+  </div>
+
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="8" cy="8" r="6"/><path d="m14 14 2.5 2.5"/>
+        </svg>
+      </div>
+      <div class="feature-title">Boolean Search</div>
+      <p class="feature-desc">Full Boolean syntax — AND, OR, NOT, exact phrases, wildcards, fuzzy matching, and proximity operators like W/10. Same logic as enterprise review platforms.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 4h12M3 9h12M3 14h8"/>
+        </svg>
+      </div>
+      <div class="feature-title">ESI Hit Reports</div>
+      <p class="feature-desc">Generate formatted ESI hit reports as Excel or PDF, broken down by term, document, and page number — ready for motion practice, Golden Rule Letters, Motions to Compel, or production to opposing counsel.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <rect x="2" y="2" width="14" height="14" rx="2"/><path d="M6 9h6M9 6v6"/>
+        </svg>
+      </div>
+      <div class="feature-title">Any File Type</div>
+      <p class="feature-desc">PDF, DOCX, XLSX, CSV, EML, MSG, PPTX, TXT, and images via OCR. If it's in the production, Strata can search it.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9 2L2 7v9h5v-5h4v5h5V7z"/>
+        </svg>
+      </div>
+      <div class="feature-title">Deposition Prep</div>
+      <p class="feature-desc">Your co-working tool for depositions, Golden Rule Letters, Motions to Compel, and trial prep. Search by witness name or key terms, hand-pick responsive documents, and export a ZIP packet with a responsiveness log.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <rect x="3" y="4" width="12" height="3" rx="1"/><rect x="3" y="9" width="12" height="3" rx="1" opacity="0.6"/><rect x="3" y="14" width="8" height="3" rx="1" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="feature-title">Redaction Scanner</div>
+      <p class="feature-desc">Immediately see what the other side is holding back. Strata scans the entire production for redacted documents — mapping black bars and PDF redaction annotations by page — so you can quickly assess compliance or violation of the Court's orders.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M2 9a7 7 0 1 0 14 0A7 7 0 0 0 2 9z"/><path d="M2 9h3m10 0h-3M9 2v3m0 10v-3"/>
+        </svg>
+      </div>
+      <div class="feature-title">Fully Local</div>
+      <p class="feature-desc">Runs entirely on your computer — no cloud uploads, no SaaS subscriptions, no per-document charges. Opens in your browser but your data never leaves your machine.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- How it works -->
+<section id="how-it-works">
+  <div class="reveal">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Up and running<br>in minutes.</h2>
+    <p class="section-sub">Upload any production in native format, index once, and search forever. No configuration, no IT involvement, no cloud.</p>
+  </div>
+
+  <div class="steps reveal">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Launch Strata</h3>
+        <p>Double-click <strong>run_windows.bat</strong> (Windows) or <strong>run_mac.command</strong> (Mac). Strata starts automatically and opens in your browser. No installation needed.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Add your documents</h3>
+        <p>Click Add Files or Add Folder to browse for documents. Strata accepts PDF, DOCX, XLSX, CSV, EML, MSG, PPTX, TXT, and images. Add the whole production folder at once.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Build the index</h3>
+        <p>Hit Build Index. Strata reads every document and builds a searchable index. Takes a few minutes for large productions — only needs to happen once.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Search and export</h3>
+        <p>Enter your search terms and get instant results with clickable page links. Export hit reports for opposing counsel or build document packets for depositions. Downloads go straight to your browser.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- Syntax -->
+<section id="syntax">
+  <div class="reveal">
+    <div class="section-label">Search syntax</div>
+    <h2 class="section-title">Powerful search.<br>Familiar syntax.</h2>
+    <p class="section-sub">The same Boolean logic you'd use in Relativity or Concordance — no learning curve.</p>
+  </div>
+
+  <div class="syntax-grid reveal">
+    <div class="syntax-card">
+      <h3>Boolean operators</h3>
+      <div class="syntax-row">
+        <span class="syntax-code">termination AND severance</span>
+        <span class="syntax-desc">Both terms present</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">fired OR terminated</span>
+        <span class="syntax-desc">Either term present</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">contract NOT expired</span>
+        <span class="syntax-desc">First without second</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">term AND NOT other</span>
+        <span class="syntax-desc">Explicit AND NOT</span>
+      </div>
+    </div>
+    <div class="syntax-card">
+      <h3>Advanced matching</h3>
+      <div class="syntax-row">
+        <span class="syntax-code">"wrongful termination"</span>
+        <span class="syntax-desc">Exact phrase</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">terminat*</span>
+        <span class="syntax-desc">Wildcard — matches terminate, termination…</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">~termination</span>
+        <span class="syntax-desc">Fuzzy — catches misspellings</span>
+      </div>
+      <div class="syntax-row">
+        <span class="syntax-code">"fired" W/10 "email"</span>
+        <span class="syntax-desc">Proximity — within 10 words</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="reveal">
+    <div class="section-label">Download</div>
+    <h2 class="section-title">Free for Windows.<br>Ready to use today.</h2>
+    <p class="section-sub">No account required. No subscription. No installer. Download the folder, double-click the launcher for your platform, and Strata opens in your browser. Everything stays on your machine.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download Strata for Windows (.zip)
+      </a>
+      <a href="#" class="btn-secondary" title="Mac version coming soon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download Strata for Mac
+      </a>
+    </div>
+    <p class="cta-os-note">Windows 10 / 11 · 64-bit · Free &nbsp;·&nbsp; macOS coming soon</p>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">Get in touch.</h2>
+  </div>
+
+  <div class="contact-grid reveal">
+    <div class="contact-info">
+      <h3>Built for litigation.</h3>
+      <p>I'm a paralegal at a busy plaintiff's side employment litigation firm. 30 active cases. Three trials in three months. I searched for a tool that could keep up and found the existing ones lacking or prohibitively expensive. So I built one. If you're in the litigation field, give it a try — and whether you have suggestions, bug reports, feature ideas, or just want to talk litigation, reach out. I'd love to hear from you.</p>
+      <div class="contact-links">
+        <a href="mailto:noahetunis@gmail.com" class="contact-link">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>
+          noahetunis@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/noahtunis/" target="_blank" class="contact-link">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></svg>
+          linkedin.com/in/noahtunis
+        </a>
+        <a href="https://github.com/tunedawg/universal-search" target="_blank" class="contact-link">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          github.com/tunedawg/universal-search
+        </a>
+      </div>
+    </div>
+
+    <form class="contact-form" id="contact-form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Your name" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button type="submit" class="form-submit" id="form-submit">Send message</button>
+      <div class="form-success" id="form-success">
+        ✓ Message sent — I'll get back to you soon.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<div class="full-divider"></div>
+<footer>
+  <div>© 2025 Noah Tunis · Strata</div>
+  <div style="display:flex;gap:24px">
+    <a href="mailto:noahetunis@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/noahtunis/" target="_blank">LinkedIn</a>
+    <a href="https://github.com/tunedawg/universal-search" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Contact form — uses Formspree
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const data = new FormData(this);
+  try {
+    const resp = await fetch('https://formspree.io/f/xlgawdpn', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (resp.ok) {
+      this.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Send message';
+      alert('Something went wrong — please email me directly at noahetunis@gmail.com');
+    }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Send message';
+    alert('Something went wrong — please email me directly at noahetunis@gmail.com');
+  }
+});
+</script>
+</body>
+</html>
