@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -17,16 +17,16 @@
   --radius:10px; --radius-sm:6px; --t:0.15s ease;
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
-header{display:flex;align-items:center;padding:0 24px;height:52px;border-bottom:1px solid var(--border);background:rgba(8,10,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0;}
-.logo{display:flex;align-items:center;gap:9px;margin-right:32px;text-decoration:none;}
-.logo-mark{width:26px;height:26px;flex-shrink:0;}
+header{display:flex;align-items:center;padding:0 34px;height:68px;border-bottom:1px solid var(--border);background:rgba(8,10,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:12px;margin-right:40px;text-decoration:none;}
+.logo-mark{width:32px;height:32px;flex-shrink:0;}
 .logo-mark svg{width:100%;height:100%;}
-.logo-name{font-size:0.95rem;font-weight:600;letter-spacing:-0.03em;color:var(--text);}
+.logo-name{font-size:1.12rem;font-weight:700;letter-spacing:-0.035em;color:var(--text);}
 nav{display:flex;align-items:center;height:100%;gap:2px;}
-.nav-link{display:flex;align-items:center;height:100%;padding:0 16px;font-size:0.8rem;font-weight:500;text-decoration:none;color:var(--text2);border-bottom:2px solid transparent;transition:color var(--t),border-color var(--t);}
+.nav-link{display:flex;align-items:center;height:100%;padding:0 20px;font-size:0.92rem;font-weight:600;text-decoration:none;color:var(--text2);border-bottom:2px solid transparent;transition:color var(--t),border-color var(--t);}
 .nav-link:hover{color:var(--text);}
 .nav-link.active{color:var(--accent-hi);border-bottom-color:var(--accent);}
-.help-btn{margin-left:auto;width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);flex-shrink:0;}
+.help-btn{margin-left:auto;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);flex-shrink:0;}
 .help-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface3);}
 .app{display:grid;grid-template-columns:300px 1fr;flex:1;min-height:0;overflow:hidden;}
 aside{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
@@ -236,7 +236,7 @@ function renderProdResults(results){
     let rows=docs.length?docs.map(d=>`<tr>
       <td class="cb-cell"><input type="checkbox" class="doc-checkbox" data-doc="${esc(d.name)}" data-term="${esc(term)}" onchange="onDocCheck(this)"></td>
       <td class="doc-name">${esc(d.name)}</td>
-      <td class="chunks-cell">${d.chunks.map(c=>{const pn=c.match(/^p(\d+)$/)?.[1];return`<span class="chunk-tag" onclick="window.open('/preview/${encodeURIComponent(prodDataset)}/${d.name.split('/').map(encodeURIComponent).join('/')}${pn?'#page='+pn:''}','_blank')">${esc(c)}</span>`;}).join("")}</td>
+      <td class="chunks-cell">${d.chunks.map(c=>{const pn=c.match(/^p(\d+)(?:\D|$)/)?.[1];const url=`/preview/${encodeURIComponent(prodDataset)}/${d.name.replace(/\\/g,'/').split('/').map(encodeURIComponent).join('/')}${pn?'?page='+pn:''}`;return`<a class="chunk-tag" href="${url}" target="_blank" rel="noopener" title="Open ${esc(d.name)} at ${esc(c)}">${esc(c)}</a>`;}).join("")}</td>
       <td class="count-cell">${d.chunks.length}</td>
     </tr>`).join(""):`<tr><td colspan="4" class="no-results">No matching documents</td></tr>`;
     card.innerHTML=`
@@ -338,23 +338,7 @@ function switchHelpTab(tab){
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('help-overlay').classList.remove('show');});
 init();
 </script>
-
-<div class="help-overlay" id="help-overlay" onclick="if(event.target===this)toggleHelp()">
-  <div class="help-modal">
-    <div class="help-header"><h2>How to use Strata</h2><button class="help-close" onclick="toggleHelp()">✕</button></div>
-    <div class="help-tabs">
-      <button class="help-tab" onclick="switchHelpTab('index')">Index</button>
-      <button class="help-tab active" onclick="switchHelpTab('production')">Production</button>
-      <button class="help-tab" onclick="switchHelpTab('redactions')">Redactions</button>
-      <button class="help-tab" onclick="switchHelpTab('syntax')">Search Syntax</button>
-    </div>
-    <div class="help-body">
-      <div class="help-panel" id="help-index"><div class="help-section"><h3>What is the Index tab?</h3><p>Run Boolean keyword searches across an entire production and export hit reports.</p></div><div class="help-section"><h3>Getting started</h3><div class="help-steps"><div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Create a production</strong> — type a name and click +.</div></div><div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Add files</strong> — drag &amp; drop or use Files / Folder buttons.</div></div><div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Build Index</strong> — click <strong>⚡ Build Index</strong>.</div></div><div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Search</strong> and <strong>Export</strong> hit reports.</div></div></div></div></div>
-      <div class="help-panel active" id="help-production"><div class="help-section"><h3>What is the Production tab?</h3><p>Deposition prep and document packet building. Search for terms, pick responsive documents, export as ZIP with a responsiveness log.</p></div><div class="help-section"><h3>How to build a document packet</h3><div class="help-steps"><div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select your production</strong> from the dropdown.</div></div><div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Enter search terms</strong> — witness names, email addresses, key dates.</div></div><div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Check boxes</strong> next to documents you want.</div></div><div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export ZIP</strong> — documents + responsiveness log.</div></div></div><div class="help-tip"><strong>Tip:</strong> Great for witness-specific packets before depositions.</div></div></div>
-      <div class="help-panel" id="help-redactions"><div class="help-section"><h3>What is the Redactions tab?</h3><p>Scans a production for redaction markers — black bars and PDF /Redact annotations — and lists which pages they appear on. Useful for identifying what opposing counsel has withheld.</p></div></div>
-      <div class="help-panel" id="help-syntax"><div class="help-section"><h3>Boolean operators</h3><div class="help-steps"><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">termination AND severance</span></div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">fired OR terminated</span></div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">contract NOT expired</span></div></div></div></div><div class="help-section"><h3>Phrases, wildcards &amp; fuzzy</h3><div class="help-steps"><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"wrongful termination"</span> — exact phrase</div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">terminat*</span> — wildcard</div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">~termination</span> — fuzzy</div></div></div></div><div class="help-section"><h3>Proximity</h3><div class="help-steps"><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"fired" W/10 "email"</span> — within 10 words</div></div></div><div class="help-tip"><strong>Combine:</strong> <span class="help-code">"John Smith" AND (fired OR terminated) AND NOT severance</span></div></div></div>
-    </div>
-  </div>
-</div>
+{% set help_active = 'production' %}
+{% include 'help.html' %}
 </body>
 </html>

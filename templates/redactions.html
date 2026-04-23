@@ -1,103 +1,161 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strata — Redactions</title>
+<title>Strata</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --bg:#080a0f; --surface:#0f1118; --surface2:#161b26; --surface3:#1c2235;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
-  --accent:#3b82f6; --accent-hi:#60a5fa; --accent-lo:rgba(59,130,246,0.12);
-  --accent2:#818cf8; --success:#34d399; --warning:#fbbf24; --danger:#f87171;
-  --redact:#fb923c;
-  --text:#f1f5f9; --text2:#64748b; --text3:#334155;
-  --mono:'Cascadia Code','Fira Mono','Consolas',monospace;
-  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --radius:10px; --radius-sm:6px; --t:0.15s ease;
+  --bg:        #080a0f;
+  --surface:   #0f1118;
+  --surface2:  #161b26;
+  --surface3:  #1c2235;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --accent:    #3b82f6;
+  --accent-hi: #60a5fa;
+  --accent-lo: rgba(59,130,246,0.12);
+  --accent2:   #818cf8;
+  --success:   #34d399;
+  --warning:   #fbbf24;
+  --danger:    #f87171;
+  --redact:    #fb923c;
+  --text:      #f1f5f9;
+  --text2:     #64748b;
+  --text3:     #334155;
+  --mono:      'Cascadia Code', 'Fira Mono', 'Consolas', monospace;
+  --sans:      -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --radius:    10px;
+  --radius-sm: 6px;
+  --transition: 0.15s ease;
 }
-body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
-header{display:flex;align-items:center;padding:0 24px;height:52px;border-bottom:1px solid var(--border);background:rgba(8,10,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0;}
-.logo{display:flex;align-items:center;gap:9px;margin-right:32px;text-decoration:none;}
-.logo-mark{width:26px;height:26px;flex-shrink:0;}
-.logo-mark svg{width:100%;height:100%;}
-.logo-name{font-size:0.95rem;font-weight:600;letter-spacing:-0.03em;color:var(--text);}
+
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+header{display:flex;align-items:center;padding:0 34px;height:68px;border-bottom:1px solid var(--border);background:rgba(8,10,15,0.95);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:12px;margin-right:40px;text-decoration:none;}
+.logo-mark{width:32px;height:32px;flex-shrink:0;}
+.logo-mark svg{width:100%;height:100%;display:block;}
+.logo-name { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.035em; color: var(--text); }
 nav{display:flex;align-items:center;height:100%;gap:2px;}
-.nav-link{display:flex;align-items:center;height:100%;padding:0 16px;font-size:0.8rem;font-weight:500;text-decoration:none;color:var(--text2);border-bottom:2px solid transparent;transition:color var(--t),border-color var(--t);}
+.nav-link{display:flex;align-items:center;height:100%;padding:0 20px;font-size:0.92rem;font-weight:600;text-decoration:none;color:var(--text2);border-bottom:2px solid transparent;transition:color var(--transition),border-color var(--transition);}
 .nav-link:hover{color:var(--text);}
 .nav-link.active{color:var(--accent-hi);border-bottom-color:var(--accent);}
-.help-btn{margin-left:auto;width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);flex-shrink:0;}
+.help-btn{margin-left:auto;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition);flex-shrink:0;}
 .help-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface3);}
-.app{display:grid;grid-template-columns:280px 1fr;flex:1;min-height:0;overflow:hidden;}
-aside{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
-.ss{padding:16px 20px;border-bottom:1px solid var(--border);}
-.ss h3{font-size:0.68rem;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500;}
-select{width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.84rem;font-family:var(--sans);cursor:pointer;}
-select:focus{outline:none;border-color:var(--redact);}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);border:none;font-size:0.8rem;font-weight:500;font-family:var(--sans);cursor:pointer;transition:all var(--t);white-space:nowrap;}
-.btn:disabled{opacity:0.3;cursor:not-allowed;pointer-events:none;}
-.btn-primary{background:var(--redact);color:white;}
-.btn-primary:hover{background:#ea7c2a;}
-.btn-ghost{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
-.btn-ghost:hover{color:var(--text);border-color:var(--border2);background:var(--surface3);}
-.btn-danger{background:rgba(248,113,113,0.1);color:var(--danger);border:1px solid rgba(248,113,113,0.25);}
-.btn-danger:hover{background:rgba(248,113,113,0.2);}
-.progress-wrap{padding:14px 20px;border-bottom:1px solid var(--border);display:none;}
-.progress-wrap.show{display:block;}
-.prog-label{font-size:0.73rem;font-family:var(--mono);color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between;}
-.prog-bar-bg{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;}
-.prog-bar-fill{height:100%;background:var(--redact);border-radius:2px;transition:width 0.3s;width:0%;}
-.prog-file{font-size:0.68rem;color:var(--text3);font-family:var(--mono);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.stat-box{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;}
-.stat-box .stat-val{font-size:1.3rem;font-family:var(--mono);font-weight:500;color:var(--redact);line-height:1;}
-.stat-box .stat-lbl{font-size:0.65rem;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px;}
-.stat-box.green .stat-val{color:var(--success);}
-.stat-box.blue .stat-val{color:var(--accent);}
-main{display:flex;flex-direction:column;overflow:hidden;}
-.toolbar{display:flex;align-items:center;gap:8px;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
-.toolbar.hide{display:none;}
-.toolbar-info{font-size:0.78rem;font-family:var(--mono);color:var(--text3);flex:1;min-width:120px;}
-.toolbar-info span{color:var(--redact);}
-.results-area{flex:1;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:12px;}
-.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);gap:12px;padding:60px;}
-.empty-state .big-icon{font-size:3.5rem;opacity:0.3;}
-.empty-state p{font-size:0.87rem;font-family:var(--mono);}
-.doc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s;}
-.doc-card:hover{border-color:var(--text3);}
-.doc-card.has-redactions{border-left:3px solid var(--redact);}
-.doc-card-header{display:flex;align-items:center;gap:12px;padding:12px 17px;cursor:pointer;user-select:none;}
-.doc-card-header:hover{background:rgba(255,255,255,0.02);}
-.doc-icon{font-size:1rem;flex-shrink:0;}
-.doc-name{font-size:0.85rem;font-weight:500;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.finding-badge{font-family:var(--mono);font-size:0.7rem;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-.finding-badge.has{background:rgba(251,146,60,0.15);color:var(--redact);border:1px solid rgba(251,146,60,0.3);}
-.finding-badge.clean{background:rgba(52,211,153,0.1);color:var(--success);border:1px solid rgba(52,211,153,0.25);}
-.chevron{color:var(--text3);font-size:0.72rem;transition:transform 0.2s;flex-shrink:0;}
-.chevron.open{transform:rotate(90deg);}
-.doc-card-body{display:none;border-top:1px solid var(--border);}
-.doc-card-body.open{display:block;}
-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
-th{text-align:left;padding:7px 13px;background:var(--surface2);color:var(--text3);font-weight:500;font-family:var(--mono);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:8px 13px;border-bottom:1px solid rgba(37,42,58,0.6);vertical-align:middle;color:var(--text2);}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(255,255,255,0.015);}
-.type-chip{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-family:var(--mono);white-space:nowrap;}
-.type-chip.pdf-annotation{background:rgba(167,139,250,0.12);color:var(--accent2);border:1px solid rgba(167,139,250,0.25);}
-.type-chip.black-bar{background:rgba(248,113,113,0.12);color:var(--danger);border:1px solid rgba(248,113,113,0.25);}
-.type-chip.white-text{background:rgba(251,191,36,0.12);color:var(--warning);border:1px solid rgba(251,191,36,0.25);}
-.type-chip.docx{background:rgba(79,142,247,0.12);color:var(--accent);border:1px solid rgba(79,142,247,0.25);}
-.type-chip.other{background:var(--surface2);color:var(--text3);border:1px solid var(--border);}
-.page-cell{font-family:var(--mono);font-size:0.76rem;color:var(--accent);cursor:pointer;white-space:nowrap;}
-.page-cell:hover{color:var(--accent-hi);}
-.loc-cell{font-family:var(--mono);font-size:0.7rem;color:var(--text3);}
-.no-findings{padding:14px 17px;font-size:0.8rem;font-family:var(--mono);color:var(--success);}
-#loading{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center;}
-#loading.show{display:flex;}
-.spinner-ring{width:40px;height:40px;border:2.5px solid var(--border2);border-top-color:var(--redact);border-radius:50%;animation:spin 0.65s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── Layout ── */
+.app { display: grid; grid-template-columns: 280px 1fr; flex: 1; min-height: 0; overflow: hidden; }
+
+/* ── Sidebar ── */
+aside { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.sidebar-section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-section h3 { font-size: 0.68rem; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+
+label { display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 4px; }
+select { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.84rem; font-family: var(--sans); transition: border-color 0.2s; cursor: pointer; }
+select:focus { outline: none; border-color: var(--redact); }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; border: none; font-size: 0.85rem; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: all 0.15s; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary { background: var(--redact); color: white; }
+.btn-primary:hover:not(:disabled) { background: #ea7c2a; }
+.btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover:not(:disabled) { color: var(--text); border-color: var(--text3); }
+.btn-danger { background: rgba(248,113,113,0.15); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+.btn-danger:hover:not(:disabled) { background: rgba(248,113,113,0.25); }
+
+/* ── Progress ── */
+.progress-wrap { padding: 14px 20px; border-bottom: 1px solid var(--border); display: none; }
+.progress-wrap.show { display: block; }
+.progress-label { font-size: 0.75rem; font-family: var(--mono); color: var(--text2); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.progress-bar-bg { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--redact); border-radius: 2px; transition: width 0.3s; width: 0%; }
+.progress-file { font-size: 0.7rem; color: var(--text3); font-family: var(--mono); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Stats panel ── */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+.stat-box .stat-val { font-size: 1.3rem; font-family: var(--mono); font-weight: 500; color: var(--redact); line-height: 1; }
+.stat-box .stat-lbl { font-size: 0.66rem; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+.stat-box.green .stat-val { color: var(--success); }
+.stat-box.blue  .stat-val { color: var(--accent); }
+
+/* ── Main ── */
+main { display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+/* Toolbar */
+.toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid rgba(251,146,60,0.2); background: rgba(251,146,60,0.06); flex-shrink: 0; flex-wrap: wrap; }
+.toolbar-info { font-size: 0.83rem; font-family: var(--mono); color: var(--redact); flex: 1; min-width: 160px; }
+.toolbar-info span { color: var(--redact); }
+.toolbar.hide { display: none; }
+
+/* Results area */
+.results-area { flex: 1; overflow-y: auto; padding: 24px 32px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Empty state */
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text3); gap: 12px; padding: 60px; }
+.empty-state .big-icon { font-size: 3.5rem; opacity: 0.3; }
+.empty-state p { font-size: 0.9rem; font-family: var(--mono); }
+
+/* Document cards */
+.doc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s; }
+.doc-card:hover { border-color: var(--text3); }
+.doc-card.has-redactions { border-left: 3px solid var(--redact); }
+
+.doc-card-header { display: flex; align-items: center; gap: 12px; padding: 13px 18px; cursor: pointer; user-select: none; }
+.doc-card-header:hover { background: rgba(255,255,255,0.02); }
+
+.doc-icon { font-size: 1.1rem; flex-shrink: 0; }
+.doc-name { font-size: 0.87rem; font-weight: 500; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.finding-badge { font-family: var(--mono); font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.finding-badge.has { background: rgba(251,146,60,0.15); color: var(--redact); border: 1px solid rgba(251,146,60,0.3); }
+.finding-badge.none { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
+.finding-badge.clean { background: rgba(52,211,153,0.1); color: var(--success); border: 1px solid rgba(52,211,153,0.25); }
+
+.chevron { color: var(--text3); font-size: 0.75rem; transition: transform 0.2s; flex-shrink: 0; }
+.chevron.open { transform: rotate(90deg); }
+
+.doc-card-body { display: none; border-top: 1px solid var(--border); }
+.doc-card-body.open { display: block; }
+
+/* Findings table */
+.findings-table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+thead { position: sticky; top: 0; z-index: 5; }
+th { text-align: left; padding: 8px 14px; background: var(--surface2); color: var(--text3); font-weight: 500; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 9px 14px; border-bottom: 1px solid rgba(37,42,58,0.6); vertical-align: middle; color: var(--text2); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.015); }
+
+.type-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-family: var(--mono); white-space: nowrap; }
+.type-chip.pdf-annotation { background: rgba(167,139,250,0.12); color: var(--accent2); border: 1px solid rgba(167,139,250,0.25); }
+.type-chip.black-bar    { background: rgba(248,113,113,0.12); color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+.type-chip.white-box    { background: rgba(251,146,60,0.12);  color: var(--redact); border: 1px solid rgba(251,146,60,0.25); }
+.type-chip.white-text   { background: rgba(251,191,36,0.12);  color: var(--warning); border: 1px solid rgba(251,191,36,0.25); }
+.type-chip.docx         { background: rgba(79,142,247,0.12);  color: var(--accent); border: 1px solid rgba(79,142,247,0.25); }
+.type-chip.other        { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
+
+.page-cell { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); white-space: nowrap; }
+.page-link { display: inline-block; color: var(--accent-hi); text-decoration: none; border: 1px solid rgba(59,130,246,0.25); background: var(--accent-lo); border-radius: 4px; padding: 2px 8px; transition: all var(--transition); }
+.page-link:hover { color: white; background: var(--accent); border-color: var(--accent); }
+.loc-cell  { font-family: var(--mono); font-size: 0.72rem; color: var(--text3); white-space: nowrap; }
+.detail-cell { font-size: 0.78rem; color: var(--text2); max-width: 340px; }
+
+.no-findings { padding: 16px 18px; font-size: 0.82rem; font-family: var(--mono); color: var(--success); }
+
+/* Loading spinner */
+#loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; }
+#loading.show { display: flex; }
+.spinner-ring { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--redact); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .help-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;padding:24px;}
 .help-overlay.show{display:flex;}
 .help-modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:680px;max-width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;}
@@ -123,9 +181,26 @@ tr:hover td{background:rgba(255,255,255,0.015);}
 .help-code{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 7px;font-family:var(--mono);font-size:0.75rem;color:var(--accent2);}
 .help-tip{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.78rem;color:var(--text2);line-height:1.6;margin-top:12px;}
 .help-tip strong{color:var(--accent-hi);}
+body > header:first-of-type{display:none;}
 </style>
 </head>
 <body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">◼</div>
+    <div>
+      <h1>Universal Search</h1>
+      <span>redaction detection</span>
+    </div>
+  </div>
+  <nav style="display:flex;gap:4px;margin-left:24px;">
+    <a href="/" class="nav-link">📇 Index</a>
+    <a href="/production" class="nav-link">📦 Production</a>
+    <a href="/redactions" class="nav-link active">◼ Redactions</a>
+      </nav>
+</header>
+
 <header>
   <a href="/" class="logo">
     <div class="logo-mark">
@@ -144,240 +219,496 @@ tr:hover td{background:rgba(255,255,255,0.015);}
 </header>
 
 <div class="app">
+
+  <!-- ── Sidebar ── -->
   <aside>
-    <div class="ss"><h3>Dataset</h3>
+
+    <div class="sidebar-section">
+      <h3>Dataset</h3>
       <select id="dataset-select" onchange="onDatasetChange()">
-        <option value="">— Select a dataset —</option>
+        <option value="">— Select an indexed dataset —</option>
       </select>
     </div>
-    <div class="ss"><h3>Detection Scope</h3>
+
+    <div class="sidebar-section">
+      <h3>Detection Scope</h3>
       <div style="display:flex;flex-direction:column;gap:6px;">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0;font-size:0.8rem;color:var(--text)"><input type="checkbox" id="chk-pdf-annot" checked> PDF annotation redactions</label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0;font-size:0.8rem;color:var(--text)"><input type="checkbox" id="chk-black-bar" checked> Black redaction bars</label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0;font-size:0.8rem;color:var(--text)"><input type="checkbox" id="chk-white-text" checked> White / hidden text</label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0;font-size:0.8rem;color:var(--text)"><input type="checkbox" id="chk-docx" checked> Word document redactions</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
+          <input type="checkbox" id="chk-pdf-annot" checked> <span style="font-size:0.8rem;color:var(--text)">Adobe PDF redactions</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
+          <input type="checkbox" id="chk-manual" checked> <span style="font-size:0.8rem;color:var(--text)">Manual PDF redactions</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
+          <input type="checkbox" id="chk-drawn" checked> <span style="font-size:0.8rem;color:var(--text)">Drawn / sharpie redactions</span>
+        </label>
       </div>
     </div>
-    <div class="ss">
-      <button class="btn btn-primary" id="scan-btn" onclick="startScan()" disabled style="width:100%">◼ Scan for Redactions</button>
-      <button class="btn btn-danger" id="cancel-btn" onclick="cancelScan()" style="width:100%;margin-top:8px;display:none">✕ Cancel Scan</button>
+
+    <div class="sidebar-section">
+      <button class="btn btn-primary" id="scan-btn" onclick="startScan()" disabled style="width:100%">
+        ◼ Scan for Redactions
+      </button>
+      <button class="btn btn-danger" id="cancel-btn" onclick="cancelScan()" style="width:100%;margin-top:8px;display:none">
+        ✕ Cancel Scan
+      </button>
     </div>
+
     <div class="progress-wrap" id="progress-wrap">
-      <div class="prog-label"><span id="prog-label">Scanning…</span><span id="prog-pct">0%</span></div>
-      <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-bar"></div></div>
-      <div class="prog-file" id="prog-file"></div>
+      <div class="progress-label">
+        <span id="prog-label">Scanning…</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-bar"></div></div>
+      <div class="progress-file" id="prog-file"></div>
     </div>
-    <div class="ss" id="stats-section" style="display:none"><h3>Scan Results</h3>
+
+    <div class="sidebar-section" id="stats-section" style="display:none">
+      <h3>Scan Results</h3>
       <div class="stats-grid">
-        <div class="stat-box"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Files Scanned</div></div>
-        <div class="stat-box"><div class="stat-val" id="stat-redacted">0</div><div class="stat-lbl">With Redactions</div></div>
-        <div class="stat-box blue"><div class="stat-val" id="stat-findings">0</div><div class="stat-lbl">Total Findings</div></div>
-        <div class="stat-box green"><div class="stat-val" id="stat-clean">0</div><div class="stat-lbl">Clean Files</div></div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-lbl">Files Scanned</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-redacted">0</div>
+          <div class="stat-lbl">With Redactions</div>
+        </div>
+        <div class="stat-box blue">
+          <div class="stat-val" id="stat-findings">0</div>
+          <div class="stat-lbl">Total Findings</div>
+        </div>
+        <div class="stat-box green">
+          <div class="stat-val" id="stat-clean">0</div>
+          <div class="stat-lbl">Clean Files</div>
+        </div>
       </div>
     </div>
+
   </aside>
 
+  <!-- ── Main ── -->
   <main>
+
+    <!-- Export toolbar (hidden until results ready) -->
     <div class="toolbar hide" id="toolbar">
-      <div class="toolbar-info">Showing <span id="info-count">0</span> documents with redactions</div>
-      <button class="btn btn-ghost" onclick="exportZip()" style="font-size:0.8rem">⬇ Documents (zip)</button>
-      <button class="btn btn-ghost" onclick="exportList()" style="font-size:0.8rem">⬇ List (xlsx)</button>
-      <button class="btn btn-ghost" onclick="exportReport('xlsx')" style="font-size:0.8rem">⬇ Report (xlsx)</button>
-      <button class="btn btn-ghost" onclick="exportReport('pdf')" style="font-size:0.8rem;border-color:rgba(251,146,60,0.4);color:var(--redact)">⬇ Report (pdf)</button>
+      <div class="toolbar-info" id="toolbar-info">
+        Showing <span id="info-count">0</span> documents with redactions
+      </div>
+      <button class="btn btn-ghost" onclick="exportZip()" title="Download all redacted documents as a ZIP archive" style="font-size:0.82rem">
+        ⬇ Documents (zip)
+      </button>
+      <button class="btn btn-ghost" onclick="exportList()" title="Export finding list as Excel" style="font-size:0.82rem">
+        ⬇ List (xlsx)
+      </button>
+      <button class="btn btn-ghost" onclick="exportReportXlsx()" title="Export full report as Excel" style="font-size:0.82rem">
+        ⬇ Report (xlsx)
+      </button>
+      <button class="btn btn-ghost" onclick="exportReportPdf()" title="Export full report as PDF" style="font-size:0.82rem;border-color:rgba(251,146,60,0.4);color:var(--redact)">
+        ⬇ Report (pdf)
+      </button>
     </div>
+
+    <!-- Results area -->
     <div class="results-area" id="results-area">
       <div class="empty-state" id="empty-state">
         <div class="big-icon">◼</div>
         <p>Select a dataset and click Scan for Redactions</p>
       </div>
     </div>
+
   </main>
 </div>
 
 <div id="loading"><div class="spinner-ring"></div></div>
 
 <script>
-let pollTimer=null,scanResults=null,scanDataset="";
+/* ─────────────────────────────────────────
+   State
+───────────────────────────────────────── */
+let pollTimer = null;
+let scanResults = null;
 
-window.addEventListener('DOMContentLoaded',()=>loadDatasets());
+/* ─────────────────────────────────────────
+   Init
+───────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  loadDatasets();
+});
 
-function loadDatasets(){
-  fetch("/datasets").then(r=>r.json()).then(datasets=>{
-    const sel=document.getElementById('dataset-select');
-    if(!datasets.length){sel.innerHTML='<option value="">— No datasets found —</option>';return;}
-    datasets.forEach(d=>{const o=document.createElement('option');o.value=d.name;o.textContent=d.name+(d.files?' ('+d.files+' files)':'');sel.appendChild(o);});
-  }).catch(()=>{});
+async function loadDatasets() {
+  try {
+    const r = await fetch('/datasets');
+    const data = await r.json();
+    const sel = document.getElementById('dataset-select');
+    const list = Array.isArray(data) ? data : (data.datasets || []);
+    const indexed = list.filter(d => typeof d === 'object' ? d.indexed : true);
+    if (!indexed.length) {
+      sel.innerHTML = '<option value="">— No indexed datasets —</option>';
+      return;
+    }
+    indexed.forEach(d => {
+      const opt = document.createElement('option');
+      const name  = typeof d === 'object' ? d.name  : d;
+      const files = typeof d === 'object' ? d.files : '';
+      opt.value = name;
+      opt.textContent = files ? `${name} (${files} files)` : name;
+      sel.appendChild(opt);
+    });
+  } catch(e) { console.error('loadDatasets', e); }
 }
 
-function onDatasetChange(){document.getElementById('scan-btn').disabled=!document.getElementById('dataset-select').value;}
+function onDatasetChange() {
+  const ds = document.getElementById('dataset-select').value;
+  document.getElementById('scan-btn').disabled = !ds;
+}
 
-async function startScan(){
-  const ds=document.getElementById('dataset-select').value;
-  if(!ds)return;
-  scanDataset=ds;scanResults=null;
+function getScanOptions() {
+  return {
+    annotations: document.getElementById('chk-pdf-annot').checked,
+    black_bars: document.getElementById('chk-manual').checked,
+    drawn_redactions: document.getElementById('chk-drawn').checked,
+    white_boxes: false,
+    hidden_text: false,
+    docx_hidden_text: false
+  };
+}
+
+/* ─────────────────────────────────────────
+   Scan
+───────────────────────────────────────── */
+async function startScan() {
+  const ds = document.getElementById('dataset-select').value;
+  if (!ds) return;
+
+  // Reset UI
+  scanResults = null;
   setResultsArea('<div class="empty-state"><div class="big-icon" style="animation:pulse 1.5s infinite">◼</div><p>Scanning documents…</p></div>');
   document.getElementById('toolbar').classList.add('hide');
-  document.getElementById('stats-section').style.display='none';
-  document.getElementById('scan-btn').disabled=true;
-  document.getElementById('cancel-btn').style.display='block';
+  document.getElementById('stats-section').style.display = 'none';
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('cancel-btn').style.display = 'block';
   showProgress(true);
-  try{
-    const resp=await fetch('/redactions/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dataset:ds})});
-    const d=await resp.json();
-    if(d.status==='started'||d.ok){pollTimer=setInterval(pollStatus,1200);}
-    else{showError(d.error||'Could not start scan');resetScanUI();}
-  }catch(e){showError('Network error: '+e.message);resetScanUI();}
+
+  try {
+    const r = await fetch('/redactions/scan', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ dataset: ds, options: getScanOptions() })
+    });
+    const d = await r.json();
+    if (d.status === 'started' || d.status === 'running') {
+      pollTimer = setInterval(pollStatus, 1200);
+    } else {
+      showError(d.error || 'Could not start scan');
+      resetScanUI();
+    }
+  } catch(e) {
+    showError('Network error: ' + e.message);
+    resetScanUI();
+  }
 }
 
-async function pollStatus(){
-  try{
-    const d=await fetch('/redactions/status').then(r=>r.json());
-    const pct=d.percent||0;
-    document.getElementById('prog-bar').style.width=pct+'%';
-    document.getElementById('prog-pct').textContent=pct+'%';
-    document.getElementById('prog-label').textContent=d.message||'Scanning…';
-    document.getElementById('prog-file').textContent=d.current_file||d.current||'';
-    if(d.status==='done'){clearInterval(pollTimer);pollTimer=null;await loadResults();}
-    else if(d.status==='cancelled'){clearInterval(pollTimer);pollTimer=null;resetScanUI();setResultsArea('<div class="empty-state"><div class="big-icon">◼</div><p>Scan cancelled</p></div>');}
-    else if(d.status==='error'){clearInterval(pollTimer);pollTimer=null;resetScanUI();showError(d.message||'Scan error');}
-  }catch(e){console.warn('poll error',e);}
+async function pollStatus() {
+  try {
+    const r = await fetch('/redactions/status');
+    const d = await r.json();
+
+    const pct = d.percent || 0;
+    document.getElementById('prog-bar').style.width = pct + '%';
+    document.getElementById('prog-pct').textContent = pct + '%';
+    document.getElementById('prog-label').textContent = d.message || 'Scanning…';
+    document.getElementById('prog-file').textContent = d.current_file || '';
+
+    if (d.status === 'done') {
+      clearInterval(pollTimer);
+      pollTimer = null;
+      await loadResults();
+    } else if (d.status === 'cancelled') {
+      clearInterval(pollTimer);
+      pollTimer = null;
+      resetScanUI();
+      setResultsArea('<div class="empty-state"><div class="big-icon">◼</div><p>Scan cancelled</p></div>');
+    } else if (d.status === 'error') {
+      clearInterval(pollTimer);
+      pollTimer = null;
+      resetScanUI();
+      showError(d.message || 'Scan error');
+    }
+  } catch(e) { console.warn('poll error', e); }
 }
 
-async function cancelScan(){
-  try{await fetch('/redactions/cancel',{method:'POST'});}catch(e){}
+async function cancelScan() {
+  try { await fetch('/redactions/cancel', { method: 'POST' }); }
+  catch(e) {}
 }
 
-async function loadResults(){
-  try{
-    const data=await fetch('/redactions/results').then(r=>r.json());
-    scanResults=data;renderResults(data);resetScanUI();showProgress(false);
-  }catch(e){showError('Could not load results');resetScanUI();}
+async function loadResults() {
+  try {
+    const r = await fetch('/redactions/results');
+    const data = await r.json();
+    scanResults = data;
+    renderResults(data);
+    resetScanUI();
+    showProgress(false);
+  } catch(e) {
+    showError('Could not load results');
+    resetScanUI();
+  }
 }
 
-function renderResults(data){
-  const docs=data.documents||[];
-  const redacted=docs.filter(d=>d.findings&&d.findings.length>0);
-  const clean=docs.filter(d=>!d.findings||d.findings.length===0);
-  document.getElementById('stat-total').textContent=docs.length;
-  document.getElementById('stat-redacted').textContent=redacted.length;
-  document.getElementById('stat-findings').textContent=data.total_findings||0;
-  document.getElementById('stat-clean').textContent=clean.length;
-  document.getElementById('stats-section').style.display='block';
-  document.getElementById('info-count').textContent=redacted.length;
-  document.getElementById('toolbar').classList.remove('hide');
-  if(!docs.length){setResultsArea('<div class="empty-state"><div class="big-icon">◼</div><p>No documents found</p></div>');return;}
-  const sorted=[...redacted.sort((a,b)=>b.findings.length-a.findings.length||a.filename.localeCompare(b.filename)),
-                ...clean.sort((a,b)=>a.filename.localeCompare(b.filename))];
-  const area=document.getElementById('results-area');area.innerHTML='';
-  sorted.forEach(doc=>area.appendChild(buildDocCard(doc)));
+/* ─────────────────────────────────────────
+   Render results
+───────────────────────────────────────── */
+function renderResults(data) {
+  const docs = data.documents || [];
+  const findings_total = data.total_findings || 0;
+  const redacted_docs = docs.filter(d => d.findings && d.findings.length > 0);
+  const clean_docs    = docs.filter(d => !d.findings || d.findings.length === 0);
+
+  // Stats panel
+  document.getElementById('stat-total').textContent    = docs.length;
+  document.getElementById('stat-redacted').textContent = redacted_docs.length;
+  document.getElementById('stat-findings').textContent = findings_total;
+  document.getElementById('stat-clean').textContent    = clean_docs.length;
+  document.getElementById('stats-section').style.display = 'block';
+
+  // Toolbar
+  const tb = document.getElementById('toolbar');
+  document.getElementById('info-count').textContent = redacted_docs.length;
+  tb.classList.remove('hide');
+
+  if (docs.length === 0) {
+    setResultsArea('<div class="empty-state"><div class="big-icon">◼</div><p>No documents found in this dataset</p></div>');
+    return;
+  }
+
+  // Sort: redacted first, then alphabetical
+  const sorted = [...redacted_docs].sort((a,b) => {
+    const fa = a.findings ? a.findings.length : 0;
+    const fb = b.findings ? b.findings.length : 0;
+    return fb - fa || a.filename.localeCompare(b.filename);
+  });
+  const allSorted = [...sorted, ...clean_docs.sort((a,b) => a.filename.localeCompare(b.filename))];
+
+  const area = document.getElementById('results-area');
+  area.innerHTML = '';
+
+  allSorted.forEach(doc => {
+    area.appendChild(buildDocCard(doc));
+  });
 }
 
-function buildDocCard(doc){
-  const card=document.createElement('div');
-  const has=doc.findings&&doc.findings.length>0;
-  card.className='doc-card'+(has?' has-redactions':'');
-  const ext=(doc.filename||'').split('.').pop().toLowerCase();
-  const icon=ext==='pdf'?'📄':(ext==='docx'||ext==='doc'?'📝':'📃');
-  const count=has?doc.findings.length:0;
-  card.innerHTML=`
+function buildDocCard(doc) {
+  const card = document.createElement('div');
+  const hasFindings = doc.findings && doc.findings.length > 0;
+  card.className = 'doc-card' + (hasFindings ? ' has-redactions' : '');
+
+  const ext = (doc.filename || '').split('.').pop().toLowerCase();
+  const icon = ext === 'pdf' ? '📄' : ext === 'docx' || ext === 'doc' ? '📝' : '📃';
+  const count = hasFindings ? doc.findings.length : 0;
+
+  const badgeClass = hasFindings ? 'has' : 'clean';
+  const badgeText  = hasFindings ? count + ' finding' + (count !== 1 ? 's' : '') : 'clean';
+
+  card.innerHTML = `
     <div class="doc-card-header" onclick="toggleCard(this)">
       <span class="doc-icon">${icon}</span>
-      <span class="doc-name" title="${esc(doc.filename)}">${esc(doc.filename)}</span>
-      <span class="finding-badge ${has?'has':'clean'}">${has?count+' finding'+(count!==1?'s':''):'clean'}</span>
+      <span class="doc-name" title="${esc(doc.filepath || doc.filename)}">${esc(doc.filename)}</span>
+      <span class="finding-badge ${badgeClass}">${badgeText}</span>
       <span class="chevron">▶</span>
     </div>
-    <div class="doc-card-body">${buildFindingsTable(doc)}</div>`;
-  if(has){const b=card.querySelector('.doc-card-body'),ch=card.querySelector('.chevron');b.classList.add('open');ch.classList.add('open');}
+    <div class="doc-card-body">
+      ${buildFindingsTable(doc)}
+    </div>
+  `;
+
+  // Auto-expand if has findings
+  if (hasFindings) {
+    const header  = card.querySelector('.doc-card-header');
+    const body    = card.querySelector('.doc-card-body');
+    const chevron = card.querySelector('.chevron');
+    body.classList.add('open');
+    chevron.classList.add('open');
+  }
+
   return card;
 }
 
-function buildFindingsTable(doc){
-  if(!doc.findings||!doc.findings.length)return`<div class="no-findings">✓ No redactions detected</div>`;
-  const rows=doc.findings.map(f=>{
-    const chip=chipClass(f.type);
-    const pn=f.page!=null?f.page:null;
-    const pageCell=pn!=null
-      ?`<span class="page-cell" onclick="window.open('/preview/${encodeURIComponent(scanDataset)}/${doc.filename.split('/').map(encodeURIComponent).join('/')}#page=${pn}','_blank')" title="Open page ${pn}">Page ${pn}</span>`
-      :'—';
-    return`<tr><td>${pageCell}</td><td><span class="type-chip ${chip}">${esc(f.type)}</span></td><td class="loc-cell">${esc(f.location||'—')}</td><td style="font-size:0.77rem;color:var(--text2)">${esc(f.details||f.type)}</td></tr>`;
+function buildFindingsTable(doc) {
+  if (!doc.findings || doc.findings.length === 0) {
+    return `<div class="no-findings">✓ No redactions detected</div>`;
+  }
+
+  const rows = doc.findings.map(f => {
+    const chipClass = getChipClass(f.type);
+    const page    = buildPageLink(doc, f);
+    const loc     = f.location || (f.bbox ? formatBbox(f.bbox) : '—');
+    const details = esc(f.details || f.type);
+    return `<tr>
+      <td class="page-cell">${page}</td>
+      <td><span class="type-chip ${chipClass}">${esc(f.type)}</span></td>
+      <td class="loc-cell">${esc(loc)}</td>
+      <td class="detail-cell">${details}</td>
+    </tr>`;
   }).join('');
-  return`<div style="overflow-x:auto"><table><thead><tr><th style="width:90px">Page</th><th style="width:200px">Redaction Type</th><th style="width:200px">Location</th><th>Details</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+
+  return `
+    <div class="findings-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:80px">Page</th>
+            <th style="width:200px">Redaction Type</th>
+            <th style="width:200px">Location</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 }
 
-function chipClass(type){
-  if(!type)return'other';const t=type.toLowerCase();
-  if(t.includes('pdf')||t.includes('annotation'))return'pdf-annotation';
-  if(t.includes('black'))return'black-bar';
-  if(t.includes('white text')||t.includes('hidden'))return'white-text';
-  if(t.includes('word')||t.includes('docx')||t.includes('highlight')||t.includes('font'))return'docx';
-  return'other';
+function getChipClass(type) {
+  if (!type) return 'other';
+  const t = type.toLowerCase();
+  if (t.includes('pdf') || t.includes('annotation')) return 'pdf-annotation';
+  if (t.includes('manual') || t.includes('black')) return 'black-bar';
+  if (t.includes('drawn') || t.includes('sharpie') || t.includes('scanned')) return 'black-bar';
+  if (t.includes('word') || t.includes('docx') || t.includes('highlight') || t.includes('font')) return 'docx';
+  return 'other';
 }
 
-function toggleCard(h){const b=h.nextElementSibling,ch=h.querySelector('.chevron');b.classList.toggle('open');ch.classList.toggle('open',b.classList.contains('open'));}
+function buildPageLink(doc, finding) {
+  if (finding.page == null) return '—';
+  const ds = document.getElementById('dataset-select').value;
+  const docPath = String(doc.filename || '').replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/');
+  const url = `/preview/${encodeURIComponent(ds)}/${docPath}?page=${encodeURIComponent(finding.page)}`;
+  return `<a class="page-link" href="${url}" target="_blank" rel="noopener" title="Open ${esc(doc.filename)} at page ${esc(finding.page)}">Page ${esc(finding.page)}</a>`;
+}
 
-async function exportZip(){
+function formatBbox(b) {
+  if (!Array.isArray(b) || b.length < 4) return '—';
+  return `(${b[0].toFixed(0)}, ${b[1].toFixed(0)}, ${b[2].toFixed(0)}, ${b[3].toFixed(0)})`;
+}
+
+function toggleCard(header) {
+  const body    = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+/* ─────────────────────────────────────────
+   Exports
+───────────────────────────────────────── */
+async function exportZip() {
+  if (!scanResults) return;
   showLoading(true);
-  try{
-    const resp=await fetch('/redactions/export_zip',{method:'POST'});
-    if(!resp.ok){const e=await resp.json();throw new Error(e.error||'Export failed');}
-    const blob=await resp.blob();const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='redacted_docs.zip';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-  }catch(e){showError(e.message);}
+  try {
+    const r = await fetch('/redactions/export_zip', { method: 'POST' });
+    if (!r.ok) { const d = await r.json(); showError(d.error || 'Export failed'); }
+    else {
+      const blob = await r.blob();
+      triggerDownload(blob, 'redacted_documents.zip');
+    }
+  } catch(e) { showError(e.message); }
   showLoading(false);
 }
 
-async function exportList(){
+async function exportList() {
+  if (!scanResults) return;
   showLoading(true);
-  try{
-    const resp=await fetch('/redactions/export_list',{method:'POST'});
-    if(!resp.ok){const e=await resp.json();throw new Error(e.error||'Export failed');}
-    const blob=await resp.blob();const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='redaction_findings.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-  }catch(e){showError(e.message);}
+  try {
+    const r = await fetch('/redactions/export_list', { method: 'POST' });
+    if (!r.ok) { const d = await r.json(); showError(d.error || 'Export failed'); }
+    else {
+      const blob = await r.blob();
+      triggerDownload(blob, 'redaction_findings_list.xlsx');
+    }
+  } catch(e) { showError(e.message); }
   showLoading(false);
 }
 
-async function exportReport(fmt){
+async function exportReportXlsx() {
+  if (!scanResults) return;
   showLoading(true);
-  try{
-    const resp=await fetch(`/redactions/export_report?format=${fmt}`,{method:'POST'});
-    if(!resp.ok){const e=await resp.json();throw new Error(e.error||'Export failed');}
-    const blob=await resp.blob();const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`redaction_report.${fmt}`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-  }catch(e){showError(e.message);}
+  try {
+    const r = await fetch('/redactions/export_report?format=xlsx', { method: 'POST' });
+    if (!r.ok) { const d = await r.json(); showError(d.error || 'Export failed'); }
+    else {
+      const blob = await r.blob();
+      triggerDownload(blob, 'redaction_report.xlsx');
+    }
+  } catch(e) { showError(e.message); }
   showLoading(false);
 }
 
-function setResultsArea(html){document.getElementById('results-area').innerHTML=html;}
-function showProgress(show){
-  document.getElementById('progress-wrap').classList.toggle('show',show);
-  if(!show){document.getElementById('prog-bar').style.width='0%';document.getElementById('prog-pct').textContent='0%';document.getElementById('prog-file').textContent='';document.getElementById('prog-label').textContent='Scanning…';}
+async function exportReportPdf() {
+  if (!scanResults) return;
+  showLoading(true);
+  try {
+    const r = await fetch('/redactions/export_report?format=pdf', { method: 'POST' });
+    if (!r.ok) { const d = await r.json(); showError(d.error || 'Export failed'); }
+    else {
+      const blob = await r.blob();
+      triggerDownload(blob, 'redaction_report.pdf');
+    }
+  } catch(e) { showError(e.message); }
+  showLoading(false);
 }
-function resetScanUI(){const ds=document.getElementById('dataset-select').value;document.getElementById('scan-btn').disabled=!ds;document.getElementById('cancel-btn').style.display='none';}
-function showLoading(show){document.getElementById('loading').classList.toggle('show',show);}
-function showError(msg){setResultsArea(`<div class="empty-state"><div class="big-icon">⚠</div><p style="color:var(--danger)">${esc(msg)}</p></div>`);}
-function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ─────────────────────────────────────────
+   Helpers
+───────────────────────────────────────── */
+function triggerDownload(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 300);
+}
+
+function setResultsArea(html) {
+  document.getElementById('results-area').innerHTML = html;
+}
+
+function showProgress(show) {
+  document.getElementById('progress-wrap').classList.toggle('show', show);
+  if (!show) {
+    document.getElementById('prog-bar').style.width = '0%';
+    document.getElementById('prog-pct').textContent = '0%';
+    document.getElementById('prog-file').textContent = '';
+    document.getElementById('prog-label').textContent = 'Scanning…';
+  }
+}
+
+function resetScanUI() {
+  const ds = document.getElementById('dataset-select').value;
+  document.getElementById('scan-btn').disabled = !ds;
+  document.getElementById('cancel-btn').style.display = 'none';
+}
+
+function showLoading(show) {
+  document.getElementById('loading').classList.toggle('show', show);
+}
+
+function showError(msg) {
+  setResultsArea(`<div class="empty-state"><div class="big-icon">⚠</div><p>${esc(msg)}</p></div>`);
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function toggleHelp(){document.getElementById('help-overlay').classList.toggle('show');}
 function switchHelpTab(tab){
   document.querySelectorAll('.help-tab').forEach((t,i)=>t.classList.toggle('active',['index','production','redactions','syntax'][i]===tab));
   document.querySelectorAll('.help-panel').forEach(p=>p.classList.toggle('active',p.id==='help-'+tab));
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('help-overlay').classList.remove('show');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('help-overlay')?.classList.remove('show');});
 </script>
-
-<div class="help-overlay" id="help-overlay" onclick="if(event.target===this)toggleHelp()">
-  <div class="help-modal">
-    <div class="help-header"><h2>How to use Strata</h2><button class="help-close" onclick="toggleHelp()">✕</button></div>
-    <div class="help-tabs">
-      <button class="help-tab" onclick="switchHelpTab('index')">Index</button>
-      <button class="help-tab" onclick="switchHelpTab('production')">Production</button>
-      <button class="help-tab active" onclick="switchHelpTab('redactions')">Redactions</button>
-      <button class="help-tab" onclick="switchHelpTab('syntax')">Search Syntax</button>
-    </div>
-    <div class="help-body">
-      <div class="help-panel" id="help-index"><div class="help-section"><h3>What is the Index tab?</h3><p>Run Boolean keyword searches across an entire production and export hit reports.</p></div><div class="help-section"><h3>Getting started</h3><div class="help-steps"><div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Create a production</strong> — type a name and click +.</div></div><div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Add files</strong> — drag &amp; drop or use Files / Folder buttons.</div></div><div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Build Index</strong> — click ⚡ Build Index.</div></div><div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Search</strong> and <strong>Export</strong> hit reports.</div></div></div></div></div>
-      <div class="help-panel" id="help-production"><div class="help-section"><h3>What is the Production tab?</h3><p>Deposition prep. Search for terms, pick responsive documents, export as ZIP with responsiveness log.</p></div></div>
-      <div class="help-panel active" id="help-redactions"><div class="help-section"><h3>What is the Redactions tab?</h3><p>Scans a production for redaction markers — black bars and PDF /Redact annotations — and tells you exactly which pages they appear on. Useful for identifying what opposing counsel has withheld.</p></div><div class="help-section"><h3>How to run a scan</h3><div class="help-steps"><div class="help-step"><div class="step-num">1</div><div class="step-text"><strong>Select a production</strong> — does not need to be indexed first.</div></div><div class="help-step"><div class="step-num">2</div><div class="step-text"><strong>Start Scan</strong> — Strata scans every PDF and Word document.</div></div><div class="help-step"><div class="step-num">3</div><div class="step-text"><strong>Review findings</strong> — page numbers and redaction type for each document.</div></div><div class="help-step"><div class="step-num">4</div><div class="step-text"><strong>Export</strong> — findings list, full report, or ZIP of redacted documents.</div></div></div><div class="help-tip"><strong>Note:</strong> Detects black redaction bars and official PDF /Redact annotations. Does not detect white-out on scanned documents.</div></div></div>
-      <div class="help-panel" id="help-syntax"><div class="help-section"><h3>Boolean operators</h3><div class="help-steps"><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">termination AND severance</span></div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">fired OR terminated</span></div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">contract NOT expired</span></div></div></div></div><div class="help-section"><h3>Phrases &amp; wildcards</h3><div class="help-steps"><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"wrongful termination"</span> — exact phrase</div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">terminat*</span> — wildcard</div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">~termination</span> — fuzzy</div></div><div class="help-step"><div class="step-num"></div><div class="step-text"><span class="help-code">"fired" W/10 "email"</span> — proximity</div></div></div></div></div>
-    </div>
-  </div>
-</div>
+{% set help_active = 'redactions' %}
+{% include 'help.html' %}
 </body>
 </html>
