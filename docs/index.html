@@ -1,9 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Strata — Legal Document Search</title>
+<title>Strata</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect x='3' y='5' width='22' height='5' rx='2.5' fill='%233b82f6'/%3E%3Crect x='3' y='12' width='22' height='5' rx='2.5' fill='%233b82f6' opacity='0.6'/%3E%3Crect x='3' y='19' width='22' height='5' rx='2.5' fill='%233b82f6' opacity='0.3'/%3E%3C/svg%3E">
+<meta name="description" content="Strata is a local-first litigation document search tool for Boolean search, OCR indexing, redaction detection, and ESI hit reports.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Strata">
+<meta property="og:description" content="Local-first litigation document search with Boolean search, OCR indexing, redaction detection, and ESI hit reports.">
+<meta property="og:image" content="/strata-social-preview.png">
+<meta property="og:image:width" content="620">
+<meta property="og:image:height" content="300">
+<meta property="og:image:alt" content="Strata logo and wordmark on a dark background.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Strata">
+<meta name="twitter:description" content="Local-first litigation document search with Boolean search, OCR indexing, redaction detection, and ESI hit reports.">
+<meta name="twitter:image" content="/strata-social-preview.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -697,6 +710,21 @@ footer a:hover { color: var(--text2); }
   .nav-links { display: none; }
   section { padding: 60px 24px; }
   .hero { padding: 100px 24px 60px; }
+  .hero-visual { margin-top: 56px; }
+  .screen-body { grid-template-columns: 1fr; min-height: 0; }
+  .screen-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 14px;
+  }
+  .screen-main { padding: 16px; }
+  .screen-result-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .screen-file,
+  .screen-chunks { width: 100%; }
   .features-grid { grid-template-columns: 1fr; }
   .syntax-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -731,7 +759,7 @@ footer a:hover { color: var(--text2); }
 <section class="hero">
   <div class="hero-badge">The all-in-one production review tool</div>
   <h1>Search any production.<br><em>In seconds.</em></h1>
-  <p>Strata is a desktop tool built for litigation — Boolean search, OCR indexing, redaction detection, and ESI hit reports across any production format. No subscriptions. No per-document or per-case fees. No cloud, so your files stay local, and your client data stays secure.</p>
+  <p>Strata is a desktop tool built for litigation - Boolean search, OCR indexing, redaction detection, and ESI hit reports across any production format. No subscriptions. No per-document or per-case fees. No cloud, so your files stay local, and your client data stays secure.</p>
   <div class="hero-actions">
     <a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -741,7 +769,7 @@ footer a:hover { color: var(--text2); }
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Download for Mac
     </a>
-    <a href="#features" class="btn-secondary">See features →</a>
+    <a href="#features" class="btn-secondary">See features &rarr;</a>
   </div>
 
   <!-- App mock -->
@@ -760,14 +788,14 @@ footer a:hover { color: var(--text2); }
             <div class="screen-ds-icon">📚</div>
             <div>
               <div class="screen-ds-name">Holmes v. Moriarty</div>
-              <div class="screen-ds-meta">553,214 docs · indexed</div>
+              <div class="screen-ds-meta">553,214 docs &middot; indexed</div>
             </div>
           </div>
           <div class="screen-ds-item">
             <div class="screen-ds-icon">📁</div>
             <div>
               <div class="screen-ds-name">Adler Production</div>
-              <div class="screen-ds-meta">1,204 docs · indexed</div>
+              <div class="screen-ds-meta">1,204 docs &middot; indexed</div>
             </div>
           </div>
         </div>
@@ -816,7 +844,7 @@ footer a:hover { color: var(--text2); }
   <div class="reveal">
     <div class="section-label">Features</div>
     <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
-    <p class="section-sub">Defendants bury documents deep in productions hoping you won't find them. Strata makes sure you do — without the enterprise price tag.</p>
+    <p class="section-sub">Defendants bury documents deep in productions hoping you won't find them. Strata makes sure you do - without the enterprise price tag.</p>
   </div>
 
   <div class="features-grid reveal">
@@ -827,7 +855,7 @@ footer a:hover { color: var(--text2); }
         </svg>
       </div>
       <div class="feature-title">Boolean Search</div>
-      <p class="feature-desc">Full Boolean syntax — AND, OR, NOT, exact phrases, wildcards, fuzzy matching, and proximity operators like W/10. Same logic as enterprise review platforms.</p>
+      <p class="feature-desc">Full Boolean syntax - AND, OR, NOT, exact phrases, wildcards, fuzzy matching, and proximity operators like W/10. Same logic as enterprise review platforms.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">
@@ -836,7 +864,7 @@ footer a:hover { color: var(--text2); }
         </svg>
       </div>
       <div class="feature-title">ESI Hit Reports</div>
-      <p class="feature-desc">Generate formatted ESI hit reports as Excel or PDF, broken down by term, document, and page number — ready for motion practice, Golden Rule Letters, Motions to Compel, or production to opposing counsel.</p>
+      <p class="feature-desc">Generate formatted ESI hit reports as Excel or PDF, broken down by term, document, and page number - ready for motion practice, Golden Rule Letters, Motions to Compel, or production to opposing counsel.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">
@@ -863,7 +891,7 @@ footer a:hover { color: var(--text2); }
         </svg>
       </div>
       <div class="feature-title">Redaction Scanner</div>
-      <p class="feature-desc">Immediately see what the other side is holding back. Strata scans the entire production for redacted documents — mapping black bars and PDF redaction annotations by page — so you can quickly assess compliance or violation of the Court's orders.</p>
+      <p class="feature-desc">Immediately see what the other side is holding back. Strata scans the entire production for redacted documents - mapping black bars and PDF redaction annotations by page - so you can quickly assess compliance or violation of the Court's orders.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">
@@ -872,7 +900,7 @@ footer a:hover { color: var(--text2); }
         </svg>
       </div>
       <div class="feature-title">Fully Local</div>
-      <p class="feature-desc">Runs entirely on your computer — no cloud uploads, no SaaS subscriptions, no per-document charges. Opens in your browser but your data never leaves your machine.</p>
+      <p class="feature-desc">Runs entirely on your computer - no cloud uploads, no SaaS subscriptions, no per-document charges. Opens in your browser but your data never leaves your machine.</p>
     </div>
   </div>
 </section>
@@ -906,7 +934,7 @@ footer a:hover { color: var(--text2); }
       <div class="step-num">3</div>
       <div class="step-content">
         <h3>Build the index</h3>
-        <p>Hit Build Index. Strata reads every document and builds a searchable index. Takes a few minutes for large productions — only needs to happen once.</p>
+        <p>Hit Build Index. Strata reads every document and builds a searchable index. Takes a few minutes for large productions - only needs to happen once.</p>
       </div>
     </div>
     <div class="step">
@@ -926,7 +954,7 @@ footer a:hover { color: var(--text2); }
   <div class="reveal">
     <div class="section-label">Search syntax</div>
     <h2 class="section-title">Powerful search.<br>Familiar syntax.</h2>
-    <p class="section-sub">The same Boolean logic you'd use in Relativity or Concordance — no learning curve.</p>
+    <p class="section-sub">The same Boolean logic you'd use in Relativity or Concordance - no learning curve.</p>
   </div>
 
   <div class="syntax-grid reveal">
@@ -957,15 +985,15 @@ footer a:hover { color: var(--text2); }
       </div>
       <div class="syntax-row">
         <span class="syntax-code">terminat*</span>
-        <span class="syntax-desc">Wildcard — matches terminate, termination…</span>
+        <span class="syntax-desc">Wildcard - matches terminate, termination...</span>
       </div>
       <div class="syntax-row">
         <span class="syntax-code">~termination</span>
-        <span class="syntax-desc">Fuzzy — catches misspellings</span>
+        <span class="syntax-desc">Fuzzy - catches misspellings</span>
       </div>
       <div class="syntax-row">
         <span class="syntax-code">"fired" W/10 "email"</span>
-        <span class="syntax-desc">Proximity — within 10 words</span>
+        <span class="syntax-desc">Proximity - within 10 words</span>
       </div>
     </div>
   </div>
@@ -989,7 +1017,7 @@ footer a:hover { color: var(--text2); }
         Download Strata for Mac
       </a>
     </div>
-    <p class="cta-os-note">Windows 10 / 11 · 64-bit · Free &nbsp;·&nbsp; macOS coming soon</p>
+    <p class="cta-os-note">Windows 10 / 11 &middot; 64-bit &middot; Free &nbsp;&middot;&nbsp; macOS coming soon</p>
   </div>
 </div>
 
@@ -1005,11 +1033,11 @@ footer a:hover { color: var(--text2); }
   <div class="contact-grid reveal">
     <div class="contact-info">
       <h3>Built for litigation.</h3>
-      <p>I'm a paralegal at a busy plaintiff's side employment litigation firm. 30 active cases. Three trials in three months. I searched for a tool that could keep up and found the existing ones lacking or prohibitively expensive. So I built one. If you're in the litigation field, give it a try — and whether you have suggestions, bug reports, feature ideas, or just want to talk litigation, reach out. I'd love to hear from you.</p>
+      <p>I'm a paralegal at a busy plaintiff's side employment litigation firm. 30 active cases. Three trials in three months. I searched for a tool that could keep up and found the existing ones lacking or prohibitively expensive. So I built one. If you're in the litigation field, give it a try - and whether you have suggestions, bug reports, feature ideas, or just want to talk litigation, reach out. I'd love to hear from you.</p>
       <div class="contact-links">
-        <a href="mailto:noahetunis@gmail.com" class="contact-link">
+        <a href="mailto:strata.ediscovery@gmail.com" class="contact-link">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>
-          noahetunis@gmail.com
+          strata.ediscovery@gmail.com
         </a>
         <a href="https://www.linkedin.com/in/noahtunis/" target="_blank" class="contact-link">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></svg>
@@ -1037,7 +1065,7 @@ footer a:hover { color: var(--text2); }
       </div>
       <button type="submit" class="form-submit" id="form-submit">Send message</button>
       <div class="form-success" id="form-success">
-        ✓ Message sent — I'll get back to you soon.
+        ✓ Message sent - I'll get back to you soon.
       </div>
     </form>
   </div>
@@ -1046,9 +1074,9 @@ footer a:hover { color: var(--text2); }
 <!-- Footer -->
 <div class="full-divider"></div>
 <footer>
-  <div>© 2025 Noah Tunis · Strata</div>
+  <div>&copy; 2025 Noah Tunis &middot; Strata</div>
   <div style="display:flex;gap:24px">
-    <a href="mailto:noahetunis@gmail.com">Email</a>
+    <a href="mailto:strata.ediscovery@gmail.com">Email</a>
     <a href="https://www.linkedin.com/in/noahtunis/" target="_blank">LinkedIn</a>
     <a href="https://github.com/tunedawg/universal-search" target="_blank">GitHub</a>
   </div>
@@ -1067,12 +1095,12 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// Contact form — uses Formspree
+// Contact form - uses Formspree
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = document.getElementById('form-submit');
   btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.textContent = 'Sending...';
 
   const data = new FormData(this);
   try {
@@ -1087,12 +1115,12 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     } else {
       btn.disabled = false;
       btn.textContent = 'Send message';
-      alert('Something went wrong — please email me directly at noahetunis@gmail.com');
+      alert('Something went wrong - please email me directly at strata.ediscovery@gmail.com');
     }
   } catch {
     btn.disabled = false;
     btn.textContent = 'Send message';
-    alert('Something went wrong — please email me directly at noahetunis@gmail.com');
+    alert('Something went wrong - please email me directly at strata.ediscovery@gmail.com');
   }
 });
 </script>
