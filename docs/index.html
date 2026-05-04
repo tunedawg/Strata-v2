@@ -446,6 +446,118 @@ section {
   line-height: 1.7;
 }
 
+/* ── Comparison ── */
+.comparison-table-wrap {
+  margin-top: 60px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.comparison-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 14px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.comparison-table th:last-child,
+.comparison-table td:last-child {
+  border-right: none;
+}
+
+.comparison-table tr:last-child td,
+.comparison-table tr:last-child th {
+  border-bottom: none;
+}
+
+.comparison-table thead th {
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-size: 0.76rem;
+  font-family: var(--mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.comparison-table .feature-head,
+.comparison-table .feature-cell {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 170px;
+  min-width: 170px;
+  text-align: left;
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.comparison-table .feature-head {
+  z-index: 5;
+}
+
+.comparison-table .strata-col {
+  background: rgba(59,130,246,0.07);
+}
+
+.comparison-table .strata-name {
+  color: var(--blue-hi);
+}
+
+.comparison-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.comparison-icon.yes {
+  color: #34d399;
+}
+
+.comparison-icon.no {
+  color: #f43f5e;
+}
+
+.comparison-icon.partial {
+  color: #f59e0b;
+}
+
+.comparison-price {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text2);
+  line-height: 1.45;
+}
+
+.comparison-rating {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.comparison-note {
+  margin-top: 20px;
+  font-size: 0.76rem;
+  color: var(--text3);
+  line-height: 1.7;
+  max-width: 760px;
+}
+
 /* ── How it works ── */
 .steps {
   display: flex;
@@ -731,6 +843,13 @@ footer a:hover { color: var(--text2); }
   .screen-file,
   .screen-chunks { width: 100%; }
   .features-grid { grid-template-columns: 1fr; }
+  .comparison-table th,
+  .comparison-table td { padding: 16px 14px; }
+  .comparison-table .feature-head,
+  .comparison-table .feature-cell {
+    width: 140px;
+    min-width: 140px;
+  }
   .syntax-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; gap: 40px; }
   .step { grid-template-columns: 1fr; gap: 8px; }
@@ -753,10 +872,11 @@ footer a:hover { color: var(--text2); }
   </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
+    <li><a href="#comparison">Compare</a></li>
     <li><a href="#how-it-works">How it works</a></li>
     <li><a href="#syntax">Search syntax</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="nav-cta">Download</a></li>
+    <li><a href="https://apps.microsoft.com/detail/9N5QQBJLCB9J?hl=en-us&gl=US&ocid=pdpshare" class="nav-cta">Download</a></li>
   </ul>
 </nav>
 
@@ -766,7 +886,7 @@ footer a:hover { color: var(--text2); }
   <h1>Search any production.<br><em>In seconds.</em></h1>
   <p>Strata is a desktop tool built for litigation - Boolean search, OCR indexing, redaction detection, and ESI hit reports across any production format. No subscriptions. No per-document or per-case fees. No cloud, so your files stay local, and your client data stays secure.</p>
   <div class="hero-actions">
-    <a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="btn-primary">
+    <a href="https://apps.microsoft.com/detail/9N5QQBJLCB9J?hl=en-us&gl=US&ocid=pdpshare" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Get Strata
     </a>
@@ -908,6 +1028,99 @@ footer a:hover { color: var(--text2); }
 
 <div class="full-divider"></div>
 
+<!-- Comparison -->
+<section id="comparison">
+  <div class="reveal">
+    <div class="section-label">Strata vs. eDiscovery platforms</div>
+    <h2 class="section-title">Local-first review.<br>Without the enterprise overhead.</h2>
+    <p class="section-sub">RelativityOne, Everlaw, Logikcull, and DISCO are cloud platforms built for hosted matters, large-scale review, and managed discovery workflows. Strata is built for litigation teams that need to search productions fast without uploading client files, managing a workspace, or paying per matter.</p>
+  </div>
+
+  <div class="comparison-table-wrap reveal">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th class="feature-head">Feature</th>
+          <th class="strata-col"><span class="strata-name">Strata</span></th>
+          <th>RelativityOne</th>
+          <th>Everlaw</th>
+          <th>Logikcull</th>
+          <th>DISCO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="feature-cell">Files stay local</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">No cloud upload</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+          <td><span class="comparison-icon no">×</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">Fast production search</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon yes">✓</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">Targeted Boolean workflow</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">Redaction scanning</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">ESI hit reports</th>
+          <td class="strata-col"><span class="comparison-icon yes">✓</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+          <td><span class="comparison-icon partial">~</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">Reported pricing</th>
+          <td class="strata-col"><span class="comparison-price">Free<br>No hosted-data fees</span></td>
+          <td><span class="comparison-price">$85-$125/GB/mo<br>online estimate</span></td>
+          <td><span class="comparison-price">Per-GB hosted data<br>quote required</span></td>
+          <td><span class="comparison-price">$395/mo + $25/GB<br>online estimate</span></td>
+          <td><span class="comparison-price">$25-$45/GB/mo<br>online estimate</span></td>
+        </tr>
+        <tr>
+          <th class="feature-cell">Best fit</th>
+          <td class="strata-col"><span class="comparison-rating">★★★★★</span></td>
+          <td><span class="comparison-rating">★★★☆☆</span></td>
+          <td><span class="comparison-rating">★★★☆☆</span></td>
+          <td><span class="comparison-rating">★★★★☆</span></td>
+          <td><span class="comparison-rating">★★★☆☆</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="comparison-note reveal">Pricing ranges are based on public vendor pricing pages where available and third-party online estimates where vendors do not publish exact rates. Everlaw's public materials describe per-GB hosted-data pricing with unlimited users, processing, and productions, but do not publish a specific dollar rate. RelativityOne, Everlaw, Logikcull, and DISCO pricing varies by data volume, term, features, and services. Those platforms remain useful for hosted review, large teams, managed workflows, analytics, and AI-assisted review. Strata is the practical alternative when the job is searching productions, finding hits, checking redactions, and generating reports from local files.</p>
+</section>
+
+<div class="full-divider"></div>
+
 <!-- How it works -->
 <section id="how-it-works">
   <div class="reveal">
@@ -1009,7 +1222,7 @@ footer a:hover { color: var(--text2); }
     <h2 class="section-title">Free for Windows.<br>Ready to use today.</h2>
     <p class="section-sub">No account required. No subscription. Install Strata on Windows and keep your productions local. Everything stays on your machine.</p>
     <div class="hero-actions">
-      <a href="https://github.com/tunedawg/universal-search/releases/tag/Strata" class="btn-primary">
+      <a href="https://apps.microsoft.com/detail/9N5QQBJLCB9J?hl=en-us&gl=US&ocid=pdpshare" class="btn-primary">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Get Strata
       </a>
